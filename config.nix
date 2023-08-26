@@ -53,8 +53,10 @@
       "fR" = "<cmd>Neotree remote<CR>";
       "fc" = "<cmd>Neotree close<CR>";
       "bp" = "<cmd>Telescope buffers<CR>";
+    
+      "<C-s>" = "<cmd>w<CR>";
+      "x" = "<cmd>d<CR>";
 
-      "<C-s>" = "<cmd>Telescope spell_suggest<CR>";
       "mk" = "<cmd>Telescope keymaps<CR>";
       "fg" = "<cmd>Telescope git_files<CR>";
 
@@ -356,12 +358,6 @@
           name = "lemminx";
           extraOptions = {
             cmd = ["${pkgs.lemminx-bin}/bin/lemminx-bin"];
-          };
-        }
-        {
-          name = "groovyls";
-          extraOptions = {
-            cmd = ["${pkgs.groovy-language-server}/bin/groovy-language-server"];
           };
         }
       ];
