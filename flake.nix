@@ -20,6 +20,10 @@
     flake-utils.url = "github:numtide/flake-utils";
 
     # Plugins in nixpkgs
+    "plugin:42Paris/42header" = {
+      url = "github:42Paris/42header";
+      flake = false;
+    };
     "plugin:clangd_extensions-nvim" = {
       url = "github:p00f/clangd_extensions.nvim";
       flake = false;
