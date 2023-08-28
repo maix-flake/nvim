@@ -20,10 +20,6 @@
     flake-utils.url = "github:numtide/flake-utils";
 
     # Plugins in nixpkgs
-    "plugin:ft-std-header" = {
-      url = "github:42Paris/42header";
-      flake = false;
-    };
     "plugin:clangd_extensions-nvim" = {
       url = "github:p00f/clangd_extensions.nvim";
       flake = false;
@@ -208,6 +204,11 @@
     # Plugins that are not in nixpkgs
     "new-plugin:vim-headerguard" = {
       url = "github:drmikehenry/vim-headerguard";
+      flake = false;
+    };
+    
+    "new-plugin:ft-std-header" = {
+      url = "github:42Paris/42header";
       flake = false;
     };
   };
