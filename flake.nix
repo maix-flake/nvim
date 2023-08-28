@@ -20,7 +20,7 @@
     flake-utils.url = "github:numtide/flake-utils";
 
     # Plugins in nixpkgs
-    "plugin:42Header" = {
+    "plugin:ft-std-header" = {
       url = "github:42Paris/42header";
       flake = false;
     };
