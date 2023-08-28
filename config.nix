@@ -543,6 +543,7 @@
     };
 
     plugins.which-key.enable = true;
+    plugins."42Header".enable = true;
 
     plugins.leap.enable = true;
 
