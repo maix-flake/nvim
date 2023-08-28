@@ -593,6 +593,7 @@
       telescope-ui-select-nvim
       vim-snippets
       markdown-preview-nvim
+      ft-std-header
     ];
   };
 }
