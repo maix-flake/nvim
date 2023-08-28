@@ -543,7 +543,7 @@
     };
 
     plugins.which-key.enable = true;
-    plugins.ft-std-header.enable = true;
+    # plugins.ft-std-header.enable = true;
 
     plugins.leap.enable = true;
 
