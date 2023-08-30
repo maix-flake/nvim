@@ -47,6 +47,10 @@
       };
     };
 
+    maps.insert = helpers.mkModeMaps {silent = true;} {
+      "<C-s>" = <cmd>w<CR>;
+    }
+
     maps.normal = helpers.mkModeMaps {silent = true;} {
       "ft" = "<cmd>Neotree<CR>";
       "fG" = "<cmd>Neotree git_status<CR>";
