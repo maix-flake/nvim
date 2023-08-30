@@ -48,7 +48,7 @@
     };
 
     maps.insert = helpers.mkModeMaps {silent = true;} {
-      "<C-s>" = <cmd>w<CR>;
+      "<C-s>" = "<cmd>w<CR>";
     };
 
     maps.normal = helpers.mkModeMaps {silent = true;} {
