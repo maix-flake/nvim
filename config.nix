@@ -97,10 +97,6 @@
       enable = true;
 
       setup = {
-        all = {
-          linter = "vale";
-        };
-
         sh = {
           #linter = "shellcheck";
           formatter = "shfmt";
@@ -136,6 +132,9 @@
         };
         css = {
           formatter = "prettier";
+        };
+        gitcommit = {
+          linter = "gitlint";
         };
       };
     };
