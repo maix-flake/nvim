@@ -57,9 +57,8 @@
       "fR" = "<cmd>Neotree remote<CR>";
       "fc" = "<cmd>Neotree close<CR>";
       "bp" = "<cmd>Telescope buffers<CR>";
-    
+
       "<C-s>" = "<cmd>w<CR>";
-      "x" = "<cmd>d<CR>";
 
       "mk" = "<cmd>Telescope keymaps<CR>";
       "fg" = "<cmd>Telescope git_files<CR>";
@@ -89,6 +88,7 @@
 
     maps.visual = helpers.mkModeMaps {silent = true;} {
       "<leader>zf" = "'<,'>ZkMatch<CR>";
+      "x" = "'<,'>dl<CR>";
     };
 
     plugins.nvim-osc52 = {
