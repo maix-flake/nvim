@@ -88,8 +88,10 @@
 
     maps.visual = helpers.mkModeMaps {silent = true;} {
       "<leader>zf" = "'<,'>ZkMatch<CR>";
-      "x" = "<leader>'<,'>dl<CR>";
+      "x" = "dl<CR>";
     };
+
+    clipboard.providers.wl-copy.enable = true;
 
     plugins.nvim-osc52 = {
       enable = true;
