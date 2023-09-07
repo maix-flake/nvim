@@ -88,7 +88,7 @@
 
     maps.visual = helpers.mkModeMaps {silent = true;} {
       "<leader>zf" = "'<,'>ZkMatch<CR>";
-      "<leader>x" = "'<,'>dl<CR>";
+      "x" = "<leader>'<,'>dl<CR>";
     };
 
     plugins.nvim-osc52 = {
