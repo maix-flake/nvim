@@ -206,7 +206,7 @@
       url = "github:drmikehenry/vim-headerguard";
       flake = false;
     };
-    
+
     "new-plugin:ft-std-header" = {
       url = "github:42Paris/42header";
       flake = false;

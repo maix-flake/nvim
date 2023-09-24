@@ -27,11 +27,40 @@
       updatetime = 100;
       colorcolumn = "100";
       spell = true;
+      list=true;
       listchars = "tab:>-,lead:·,nbsp:␣,trail:•";
+      #listchars = "tab:󰁔,lead:·,nbsp:␣,trail:•";
       fsync = true;
 
       timeout = true;
       timeoutlen = 300;
+    };
+
+    highlight = {
+      IndentBlanklineIndent1 = {
+        fg = "#E06C75";
+        nocombine = true;
+      };
+      IndentBlanklineIndent2 = {
+        fg = "#E5C07B";
+        nocombine = true;
+      };
+      IndentBlanklineIndent3 = {
+        fg = "#98C379";
+        nocombine = true;
+      };
+      IndentBlanklineIndent4 = {
+        fg = "#56B6C2";
+        nocombine = true;
+      };
+      IndentBlanklineIndent5 = {
+        fg = "#61AFEF";
+        nocombine = true;
+      };
+      IndentBlanklineIndent6 = {
+        fg = "#C678DD";
+        nocombine = true;
+      };
     };
 
     commands = {
@@ -134,7 +163,7 @@
           linter = "djlint";
         };
         json = {
-          formatter = "prettier";
+       formatter = "prettier";
         };
         css = {
           formatter = "prettier";
@@ -353,6 +382,17 @@
 
       showCurrentContext = true;
       showCurrentContextStart = true;
+      showEndOfLine = true;
+      showTrailingBlanklineIndent = true;
+      #charList = ["󰁔" "·" "␣" "•"];
+      charHighlightList = [
+        "IndentBlanklineIndent1"
+        "IndentBlanklineIndent2"
+        "IndentBlanklineIndent3"
+        "IndentBlanklineIndent4"
+        "IndentBlanklineIndent5"
+        "IndentBlanklineIndent6"
+      ];
     };
 
     plugins.lsp = {
