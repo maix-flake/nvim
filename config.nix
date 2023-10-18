@@ -2,6 +2,7 @@
   pkgs,
   config,
   helpers,
+  lib,
   ...
 }: {
   config = {
@@ -76,49 +77,58 @@
       };
     };
 
-    maps.insert = helpers.mkModeMaps {silent = true;} {
-      "<C-s>" = "<cmd>w<CR>";
-    };
+    keymaps = let
+      modeKeys = mode:
+        lib.attrsets.mapAttrsToList (key: action: {
+          inherit key action mode;
+        });
+      nm = modeKeys ["n"];
+      vs = modeKeys ["v"];
+      im = modeKeys ["i"];
+    in
+      helpers.keymaps.mkKeymaps {options.silent = true;} (nm {
+        "ft" = "<cmd>Neotree<CR>";
+        "fG" = "<cmd>Neotree git_status<CR>";
+        "fR" = "<cmd>Neotree remote<CR>";
+        "fc" = "<cmd>Neotree close<CR>";
+        "bp" = "<cmd>Telescope buffers<CR>";
 
-    maps.normal = helpers.mkModeMaps {silent = true;} {
-      "ft" = "<cmd>Neotree<CR>";
-      "fG" = "<cmd>Neotree git_status<CR>";
-      "fR" = "<cmd>Neotree remote<CR>";
-      "fc" = "<cmd>Neotree close<CR>";
-      "bp" = "<cmd>Telescope buffers<CR>";
+        "<C-s>" = "<cmd>w<CR>";
 
-      "<C-s>" = "<cmd>w<CR>";
+        "mk" = "<cmd>Telescope keymaps<CR>";
+        "fg" = "<cmd>Telescope git_files<CR>";
+        "gr" = "<cmd>Telescope lsp_references<CR>";
+        "gI" = "<cmd>Telescope lsp_implementations<CR>";
+        "gW" = "<cmd>Telescope lsp_workspace_symbols<CR>";
+        "gF" = "<cmd>Telescope lsp_document_symbols<CR>";
+        "ge" = "<cmd>Telescope diagnostics bufnr=0<CR>";
+        "gE" = "<cmd>Telescope diagnostics<CR>";
 
-      "mk" = "<cmd>Telescope keymaps<CR>";
-      "fg" = "<cmd>Telescope git_files<CR>";
-
-      "gr" = "<cmd>Telescope lsp_references<CR>";
-      "gI" = "<cmd>Telescope lsp_implementations<CR>";
-      "gW" = "<cmd>Telescope lsp_workspace_symbols<CR>";
-      "gF" = "<cmd>Telescope lsp_document_symbols<CR>";
-      "ge" = "<cmd>Telescope diagnostics bufnr=0<CR>";
-      "gE" = "<cmd>Telescope diagnostics<CR>";
-
-      "<leader>rn" = {
-        action = ''
-          function()
-          	return ":IncRename " .. vim.fn.expand("<cword>")
-          end
-        '';
-        lua = true;
-        expr = true;
-      };
-
-      "<leader>zn" = "<Cmd>ZkNew { title = vim.fn.input('Title: ') }<CR>";
-      "<leader>zo" = "<Cmd>ZkNotes { sort = { 'modified' } }<CR>";
-      "<leader>zt" = "<Cmd>ZkTags<CR>";
-      "<leader>zf" = "<Cmd>ZkNotes { sort = { 'modified' }, match = { vim.fn.input('Search: ') } }<CR>";
-    };
-
-    maps.visual = helpers.mkModeMaps {silent = true;} {
-      "<leader>zf" = "'<,'>ZkMatch<CR>";
-      "x" = "dl<CR>";
-    };
+        "<leader>zn" = "<Cmd>ZkNew { title = vim.fn.input('Title: ') }<CR>";
+        "<leader>zo" = "<Cmd>ZkNotes { sort = { 'modified' } }<CR>";
+        "<leader>zt" = "<Cmd>ZkTags<CR>";
+        "<leader>zf" = "<Cmd>ZkNotes { sort = { 'modified' }, match = { vim.fn.input('Search: ') } }<CR>";
+      })
+      ++ (vs {
+        "<leader>zf" = "'<,'>ZkMatch<CR>";
+        "x" = "dl<CR>";
+      })
+      ++ (im {
+        "<C-s>" = "<cmd>w<CR>";
+      })
+      ++ [
+        {
+          key = "<leader>rn";
+          mode = ["n"];
+          action = ''
+            function()
+            	return ":IncRename " .. vim.fn.expand("<cword>")
+            end
+          '';
+          lua = true;
+          options.expr = true;
+        }
+      ];
 
     clipboard.providers.wl-copy.enable = true;
 
@@ -405,6 +415,12 @@
             cmd = ["${pkgs.lemminx-bin}/bin/lemminx-bin"];
           };
         }
+        # {
+        #   name = "groovyls";
+        #   extraOptions = {
+        #     cmd = ["${pkgs.groovy-language-server}/bin/groovy-language-server"];
+        #   };
+        # }
       ];
 
       keymaps = {
@@ -537,7 +553,7 @@
     };
 
     plugins.netman = {
-      enable = true;
+      enable = false;
       package = pkgs.vimPlugins.netman-nvim;
       neoTreeIntegration = true;
     };

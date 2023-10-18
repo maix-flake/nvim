@@ -185,7 +185,7 @@
       flake = false;
     };
     "plugin:markdown-preview-nvim" = {
-      url = "github:iamcco/markdown-preview.nvim";
+      url = "github:iamcco/markdown-preview.nvim?rev=02cc3874738bc0f86e4b91f09b8a0ac88aef8e96";
       flake = false;
     };
     "plugin:which-key-nvim" = {
@@ -272,7 +272,7 @@
                 // (
                   pkgs.lib.mapAttrs (
                     pname: src:
-                      prev.vimUtils.buildVimPluginFrom2Nix {
+                      prev.vimUtils.buildVimPlugin {
                         inherit pname src;
                         version = src.shortRev;
                       }
