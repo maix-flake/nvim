@@ -395,14 +395,14 @@
       #showEndOfLine = true;
       #showTrailingBlanklineIndent = true;
       #charList = ["󰁔" "·" "␣" "•"];
-      charHighlightList = [
-        "IndentBlanklineIndent1"
-        "IndentBlanklineIndent2"
-        "IndentBlanklineIndent3"
-        "IndentBlanklineIndent4"
-        "IndentBlanklineIndent5"
-        "IndentBlanklineIndent6"
-      ];
+      #charHighlightList = [
+      #  "IndentBlanklineIndent1"
+      #  "IndentBlanklineIndent2"
+      #  "IndentBlanklineIndent3"
+      #  "IndentBlanklineIndent4"
+      #  "IndentBlanklineIndent5"
+      #  "IndentBlanklineIndent6"
+      #];
     };
 
     plugins.lsp = {
