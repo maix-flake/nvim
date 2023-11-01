@@ -388,21 +388,11 @@
     plugins.indent-blankline = {
       enable = true;
 
-      #useTreesitter = true;
+      scope = {
+        enabled = true;
 
-      showCurrentContext = true;
-      showCurrentContextStart = true;
-      #showEndOfLine = true;
-      #showTrailingBlanklineIndent = true;
-      #charList = ["󰁔" "·" "␣" "•"];
-      #charHighlightList = [
-      #  "IndentBlanklineIndent1"
-      #  "IndentBlanklineIndent2"
-      #  "IndentBlanklineIndent3"
-      #  "IndentBlanklineIndent4"
-      #  "IndentBlanklineIndent5"
-      #  "IndentBlanklineIndent6"
-      #];
+        showStart = true;
+      };
     };
 
     plugins.lsp = {
@@ -648,7 +638,12 @@
       '';
     };
 
-    extraPackages = with pkgs; [sca2d djlint];
+    extraPackages = with pkgs; [
+      /*
+      sca2d
+      */
+      djlint
+    ];
 
     extraPlugins = with pkgs.vimPlugins; [
       telescope-ui-select-nvim

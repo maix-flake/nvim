@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs-staging.url = "github:nixos/nixpkgs/staging";
     nixvim = {
       url = "github:pta2002/nixvim";
       #url = "/home/traxys/Documents/nixvim";
@@ -185,7 +186,7 @@
       flake = false;
     };
     "plugin:markdown-preview-nvim" = {
-      url = "github:iamcco/markdown-preview.nvim?rev=02cc3874738bc0f86e4b91f09b8a0ac88aef8e96";
+      url = "github:iamcco/markdown-preview.nvim";
       flake = false;
     };
     "plugin:which-key-nvim" = {
@@ -216,6 +217,7 @@
   outputs = {
     self,
     nixpkgs,
+    nixpkgs-staging,
     nixvim,
     neovim-flake,
     flake-utils,
@@ -223,6 +225,10 @@
   } @ inputs:
     flake-utils.lib.eachDefaultSystem (system:
       with builtins; let
+        pkgs-staging = import nixpkgs-staging {
+          inherit system;
+        };
+
         module = {
           imports = [
             ./config.nix
@@ -231,13 +237,9 @@
             ./plugins/lsp-signature.nix
             ./modules
           ];
-          package = neovim-flake.packages."${system}".neovim.overrideAttrs (oa: {
-            patches = builtins.filter (v:
-              if pkgs.lib.attrsets.isDerivation v
-              then v.name != "use-the-correct-replacement-args-for-gsub-directive.patch"
-              else true)
-            oa.patches;
-          });
+          package = neovim-flake.packages."${system}".neovim.override {
+            inherit (pkgs-staging) libvterm-neovim;
+          };
         };
 
         inputsMatching = prefix:

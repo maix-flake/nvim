@@ -690,6 +690,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-staging": {
+      "locked": {
+        "lastModified": 1698840105,
+        "narHash": "sha256-hvtvlzQKukNgGDlGHFkrRafbVeM9nYTNy2hl4AWb3wM=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "eafaa27c7ead6ad710e2fc1fa334b73d9939b4ae",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "staging",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-traxys": {
       "locked": {
         "lastModified": 1692884435,
@@ -1067,17 +1083,16 @@
     "plugin:markdown-preview-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1652448059,
-        "narHash": "sha256-e1Buvu/lkEt9V5LVDFKWTasnSX6EdtRgWyVDZA8LpUE=",
+        "lastModified": 1697511247,
+        "narHash": "sha256-TBXdG/Ih5DusAYZJyn37zVqHcMD85VkjrCoLyTo/KBg=",
         "owner": "iamcco",
         "repo": "markdown-preview.nvim",
-        "rev": "02cc3874738bc0f86e4b91f09b8a0ac88aef8e96",
+        "rev": "a923f5fc5ba36a3b17e289dc35dc17f66d0548ee",
         "type": "github"
       },
       "original": {
         "owner": "iamcco",
         "repo": "markdown-preview.nvim",
-        "rev": "02cc3874738bc0f86e4b91f09b8a0ac88aef8e96",
         "type": "github"
       }
     },
@@ -1660,6 +1675,7 @@
         "new-plugin:vim-headerguard": "new-plugin:vim-headerguard",
         "nixfiles": "nixfiles",
         "nixpkgs": "nixpkgs_5",
+        "nixpkgs-staging": "nixpkgs-staging",
         "nixvim": "nixvim",
         "plugin:clangd_extensions-nvim": "plugin:clangd_extensions-nvim",
         "plugin:cmp-buffer": "plugin:cmp-buffer",
