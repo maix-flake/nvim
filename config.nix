@@ -388,12 +388,12 @@
     plugins.indent-blankline = {
       enable = true;
 
-      useTreesitter = true;
+      #useTreesitter = true;
 
       showCurrentContext = true;
       showCurrentContextStart = true;
-      showEndOfLine = true;
-      showTrailingBlanklineIndent = true;
+      #showEndOfLine = true;
+      #showTrailingBlanklineIndent = true;
       #charList = ["󰁔" "·" "␣" "•"];
       charHighlightList = [
         "IndentBlanklineIndent1"
