@@ -94,6 +94,7 @@
         "bp" = "<cmd>Telescope buffers<CR>";
 
         "<C-s>" = "<cmd>w<CR>";
+        "<F1>" = "<cmd>:Stdheader<CR>";
 
         "mk" = "<cmd>Telescope keymaps<CR>";
         "fg" = "<cmd>Telescope git_files<CR>";
@@ -112,9 +113,11 @@
       ++ (vs {
         "<leader>zf" = "'<,'>ZkMatch<CR>";
         "x" = "dl<CR>";
+        "<F1>" = "<cmd>:Stdheader<CR>";
       })
       ++ (im {
         "<C-s>" = "<cmd>w<CR>";
+        "<F1>" = "<cmd>:Stdheader<CR>";
       })
       ++ [
         {
