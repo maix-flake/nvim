@@ -154,7 +154,7 @@
           linter = "cppcheck";
         };
         markdown = {
-          formatter = "cbfmt";
+          formatter = ["cbfmt" "mdformat"];
         };
         python = {
           formatter = "black";
@@ -176,6 +176,9 @@
        formatter = "prettier";
         };
         css = {
+          formatter = "prettier";
+        };
+        ts = {
           formatter = "prettier";
         };
         gitcommit = {
@@ -436,6 +439,7 @@
         dartls.enable = true;
         clangd.enable = true;
         typst-lsp.enable = true;
+        tsserver.enable = true;
         efm.extraOptions = {
           init_options = {
             documentFormatting = true;
@@ -457,6 +461,7 @@
         cargo.features = "all";
         checkOnSave = true;
         check.command = "clippy";
+        rustc.source = "discover";
       };
     };
 
@@ -643,6 +648,14 @@
       sca2d
       */
       djlint
+      (with python3.pkgs;
+        mdformat.withPlugins [
+          mdformat-gfm
+          mdformat-frontmatter
+          mdformat-footnote
+          mdformat-tables
+          mdit-py-plugins
+        ])
     ];
 
     extraPlugins = with pkgs.vimPlugins; [
