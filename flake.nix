@@ -20,6 +20,8 @@
     };
     flake-utils.url = "github:numtide/flake-utils";
 
+    norminette-lsp.url = "github:Maix0/norminette-lsp-flake";
+
     # Plugins in nixpkgs
     "plugin:clangd_extensions-nvim" = {
       url = "github:p00f/clangd_extensions.nvim";
@@ -221,6 +223,7 @@
     nixvim,
     neovim-flake,
     flake-utils,
+    norminette-lsp,
     ...
   } @ inputs:
     flake-utils.lib.eachDefaultSystem (system:
@@ -292,6 +295,9 @@
                     prev.callPackage ./nvim-treesitter/override.nix {} final.vimPlugins prev.vimPlugins
                   );
                 };
+            })
+            (final: prev: {
+              norminette = norminette-lsp.packages."${system}".default;
             })
           ];
         };
