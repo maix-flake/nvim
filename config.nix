@@ -452,7 +452,7 @@
         bashls.enable = true;
         dartls.enable = true;
         clangd.enable = true;
-        typst-lsp.enable = true;
+        #typst-lsp.enable = true;
         tsserver.enable = true;
         efm.extraOptions = {
           init_options = {
@@ -463,7 +463,7 @@
       };
     };
 
-    plugins.typst-vim.enable = true;
+    #plugins.typst-vim.enable = true;
 
     plugins.rust-tools = {
       enable = true;
