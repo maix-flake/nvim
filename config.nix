@@ -146,6 +146,15 @@
     plugins.efmls-configs = {
       enable = true;
 
+      toolPackages.mdformat = with pkgs.python3.pkgs;
+        mdformat.withPlugins [
+          mdformat-gfm
+          mdformat-frontmatter
+          mdformat-footnote
+          mdformat-tables
+          mdit-py-plugins
+        ];
+
       setup = {
         sh = {
           #linter = "shellcheck";
@@ -653,14 +662,6 @@
       sca2d
       */
       djlint
-      (with python3.pkgs;
-        mdformat.withPlugins [
-          mdformat-gfm
-          mdformat-frontmatter
-          mdformat-footnote
-          mdformat-tables
-          mdit-py-plugins
-        ])
     ];
 
     extraPlugins = with pkgs.vimPlugins; [
