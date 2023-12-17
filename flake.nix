@@ -21,6 +21,8 @@
     flake-utils.url = "github:numtide/flake-utils";
 
     norminette-lsp.url = "github:Maix0/norminette-lsp-flake";
+    neovim-libvterm-src.url = "github:neovim/libvterm";
+    neovim-libvterm-src.flake = false;
 
     # Plugins in nixpkgs
     "plugin:clangd_extensions-nvim" = {
@@ -224,14 +226,11 @@
     neovim-flake,
     flake-utils,
     norminette-lsp,
+    neovim-libvterm-src,
     ...
   } @ inputs:
     flake-utils.lib.eachDefaultSystem (system:
       with builtins; let
-        pkgs-staging = import nixpkgs-staging {
-          inherit system;
-        };
-
         module = {
           imports = [
             ./config.nix
@@ -240,9 +239,7 @@
             ./plugins/lsp-signature.nix
             ./modules
           ];
-          package = neovim-flake.packages."${system}".neovim.override {
-            inherit (pkgs-staging) libvterm-neovim;
-          };
+          package = neovim-flake.packages."${system}".neovim;
         };
 
         inputsMatching = prefix:
@@ -298,6 +295,11 @@
             })
             (final: prev: {
               norminette = norminette-lsp.packages."${system}".default;
+            })
+            (final: prev: {
+              neovim-libvterm = prev.neovim-libvterm.overrideAttrs (_: {
+                src = neovim-libvterm-src;
+              });
             })
           ];
         };
