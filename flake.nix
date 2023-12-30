@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nixpkgs-staging.url = "github:nixos/nixpkgs/staging";
     nixvim = {
       url = "github:nix-community/nixvim";
       #url = "/home/traxys/Documents/nixvim";
@@ -221,7 +220,6 @@
   outputs = {
     self,
     nixpkgs,
-    nixpkgs-staging,
     nixvim,
     neovim-flake,
     flake-utils,

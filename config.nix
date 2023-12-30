@@ -11,6 +11,49 @@
       enable = true;
     };
 
+    autoGroups.BigFileOptimizer = {};
+    autoCmd = [
+      {
+        event = "BufReadPost";
+        pattern = [
+          "*.md"
+          "*.rs"
+          "*.lua"
+          "*.sh"
+          "*.bash"
+          "*.zsh"
+          "*.js"
+          "*.jsx"
+          "*.ts"
+          "*.tsx"
+          "*.c"
+          ".h"
+          "*.cc"
+          ".hh"
+          "*.cpp"
+          ".cph"
+        ];
+        group = "BigFileOptimizer";
+        callback = helpers.mkRaw ''
+          function(auEvent)
+            local bufferCurrentLinesCount = vim.api.nvim_buf_line_count(0)
+
+            if bufferCurrentLinesCount > 2048 then
+              vim.notify("bigfile: disabling features", vim.log.levels.WARN)
+
+              vim.cmd("TSBufDisable refactor.highlight_definitions")
+          vim.g.matchup_matchparen_enabled = 0
+          require("nvim-treesitter.configs").setup({
+           matchup = {
+             enable = false
+           }
+          })
+            end
+          end
+        '';
+      }
+    ];
+
     globals = {
       neo_tree_remove_legacy_commands = 1;
       mapleader = " ";
@@ -81,9 +124,15 @@
 
     keymaps = let
       modeKeys = mode:
-        lib.attrsets.mapAttrsToList (key: action: {
-          inherit key action mode;
-        });
+        lib.attrsets.mapAttrsToList (key: action:
+          {
+            inherit key mode;
+          }
+          // (
+            if builtins.isString action
+            then {inherit action;}
+            else action
+          ));
       nm = modeKeys ["n"];
       vs = modeKeys ["v"];
       im = modeKeys ["i"];
@@ -111,6 +160,10 @@
         "<leader>zo" = "<Cmd>ZkNotes { sort = { 'modified' } }<CR>";
         "<leader>zt" = "<Cmd>ZkTags<CR>";
         "<leader>zf" = "<Cmd>ZkNotes { sort = { 'modified' }, match = { vim.fn.input('Search: ') } }<CR>";
+        "yH" = {
+          action = "<Cmd>Telescope yank_history<CR>";
+          options.desc = "history";
+        };
       })
       ++ (vs {
         "<leader>zf" = "'<,'>ZkMatch<CR>";
@@ -616,6 +669,14 @@
     # plugins.ft-std-header.enable = true;
 
     plugins.leap.enable = true;
+
+    plugins.yanky = {
+      enable = true;
+      picker.telescope = {
+        useDefaultMappings = true;
+        enable = true;
+      };
+    };
 
     files."ftplugin/nix.lua" = {
       options = {
