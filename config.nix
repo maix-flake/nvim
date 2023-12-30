@@ -73,7 +73,7 @@
       updatetime = 100;
       colorcolumn = "100";
       spell = true;
-      list=true;
+      list = true;
       #listchars = "tab:>-,lead:·,nbsp:␣,trail:•";
       listchars = "tab:󰁔 ,lead:·,nbsp:␣,trail:•";
       fsync = true;
@@ -240,7 +240,7 @@
           linter = "djlint";
         };
         json = {
-       formatter = "prettier";
+          formatter = "prettier";
         };
         css = {
           formatter = "prettier";
@@ -469,12 +469,12 @@
       enable = true;
 
       enabledServers = [
-        {
-          name = "lemminx";
-          extraOptions = {
-            cmd = ["${pkgs.lemminx-bin}/bin/lemminx-bin"];
-          };
-        }
+        #{
+        #  name = "lemminx";
+        #  extraOptions = {
+        #   cmd = ["${pkgs.lemminx-bin}/bin/lemminx-bin"];
+        #  };
+        #}
         # {
         #   name = "groovyls";
         #   extraOptions = {

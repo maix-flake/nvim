@@ -5,21 +5,22 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixvim = {
       url = "github:nix-community/nixvim";
-      #url = "/home/traxys/Documents/nixvim";
-      #url = "github:traxys/nixvim?ref=dev";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
     };
     neovim-flake = {
       url = "github:neovim/neovim?dir=contrib";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nixfiles = {
-      url = "github:traxys/Nixfiles";
-      inputs.nvim-traxys.follows = "/";
+      inputs.flake-utils.follows = "flake-utils";
     };
     flake-utils.url = "github:numtide/flake-utils";
 
-    norminette-lsp.url = "github:Maix0/norminette-lsp-flake";
+    norminette-lsp = {
+      url = "github:Maix0/norminette-lsp-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
+
     neovim-libvterm-src.url = "github:neovim/libvterm";
     neovim-libvterm-src.flake = false;
 
@@ -254,11 +255,6 @@
           inherit system;
           overlays = [
             (final: prev: {
-              inherit
-                (inputs.nixfiles.packages."${system}")
-                lemminx-bin
-                groovy-language-server
-                ;
               vimPlugins =
                 prev.vimPlugins
                 // (pkgs.lib.mapAttrs (
