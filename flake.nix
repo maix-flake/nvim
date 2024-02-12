@@ -6,7 +6,6 @@
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
     };
     neovim-flake = {
       url = "github:neovim/neovim?dir=contrib";
@@ -246,7 +245,32 @@
             ./plugins/lsp-signature.nix
             ./modules
           ];
-          package = neovim-flake.packages."${system}".neovim;
+          package = neovim-flake.packages."${system}".neovim.overrideAttrs (
+            o: let
+              version = "0.20.9";
+              sha256 = "sha256-NxWqpMNwu5Ajffw1E2q9KS4TgkCH6M+ctFyi9Jp0tqQ=";
+              src = pkgs.fetchFromGitHub {
+                owner = "tree-sitter";
+                repo = "tree-sitter";
+                rev = "v${version}";
+                inherit sha256;
+                fetchSubmodules = true;
+              };
+              tree-sitter = pkgs.tree-sitter.overrideAttrs (drv: rec {
+                name = "tree-sitter";
+                inherit src version;
+                cargoDeps = pkgs.rustPlatform.importCargoLock {
+                  lockFile = pkgs.fetchurl {
+                    url = "https://raw.githubusercontent.com/tree-sitter/tree-sitter/v${version}/Cargo.lock";
+                    sha256 = "sha256-CVxS6AAHkySSYI9vY9k1DLrffZC39nM7Bc01vfjMxWk=";
+                  };
+                  allowBuiltinFetchGit = true;
+                };
+              });
+            in {
+              buildInputs = [tree-sitter] ++ o.buildInputs;
+            }
+          );
         };
 
         inputsMatching = prefix:
@@ -297,6 +321,35 @@
             })
             (final: prev: {
               norminette = norminette-lsp.packages."${system}".default;
+            })
+            (final: prev: let
+              version = "0.20.9";
+              sha256 = "sha256-NxWqpMNwu5Ajffw1E2q9KS4TgkCH6M+ctFyi9Jp0tqQ=";
+              src = pkgs.fetchFromGitHub {
+                owner = "tree-sitter";
+                repo = "tree-sitter";
+                rev = "v${version}";
+                inherit sha256;
+                fetchSubmodules = true;
+              };
+              tree-sitter = pkgs.tree-sitter.overrideAttrs (drv: rec {
+                name = "tree-sitter";
+                inherit src version;
+                cargoDeps = pkgs.rustPlatform.importCargoLock {
+                  lockFile = pkgs.fetchurl {
+                    url = "https://raw.githubusercontent.com/tree-sitter/tree-sitter/v${version}/Cargo.lock";
+                    sha256 = "sha256-CVxS6AAHkySSYI9vY9k1DLrffZC39nM7Bc01vfjMxWk=";
+                  };
+                  allowBuiltinFetchGit = true;
+                };
+              });
+            in {
+              neovim = prev.neovim.overrideAttrs (o: {
+                buildInputs = [tree-sitter] ++ o.buildInputs;
+              });
+              neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (o: {
+                buildInputs = [tree-sitter] ++ o.buildInputs;
+              });
             })
             (final: prev: {
               neovim-libvterm = prev.neovim-libvterm.overrideAttrs (_: {

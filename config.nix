@@ -205,15 +205,15 @@
     plugins.efmls-configs = {
       enable = true;
 
-      toolPackages.mdformat = with pkgs.python3.pkgs;
-        mdformat.withPlugins [
-          # TODO: broken with update of mdformat
-          # mdformat-gfm
-          mdformat-frontmatter
-          mdformat-footnote
-          mdformat-tables
-          mdit-py-plugins
-        ];
+      #  toolPackages.mdformat = with pkgs.python3.pkgs;
+      #    pkgs.mdformat.withPlugins [
+      #      # TODO: broken with update of mdformat
+      #      # mdformat-gfm
+      #      mdformat-frontmatter
+      #      mdformat-footnote
+      #      mdformat-tables
+      #      mdit-py-plugins
+      #    ];
 
       setup = {
         sh = {
