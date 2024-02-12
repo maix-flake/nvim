@@ -71,9 +71,9 @@
       cmdheight = 2;
       cot = ["menu" "menuone" "noselect"];
       updatetime = 100;
-      colorcolumn = "100";
-      spell = true;
-      list = true;
+      colorcolumn = "80";
+      spell = false;
+      #list = true;
       #listchars = "tab:>-,lead:·,nbsp:␣,trail:•";
       listchars = "tab:󰁔 ,lead:·,nbsp:␣,trail:•";
       fsync = true;
@@ -156,6 +156,12 @@
         "ge" = "<cmd>Telescope diagnostics bufnr=0<CR>";
         "gE" = "<cmd>Telescope diagnostics<CR>";
 
+        "<leader>h" = {
+          action = "<cmd>lua vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())<CR>";
+          options = {
+            desc = "toggle inlay hints";
+          };
+        };
         "<leader>zn" = "<Cmd>ZkNew { title = vim.fn.input('Title: ') }<CR>";
         "<leader>zo" = "<Cmd>ZkNotes { sort = { 'modified' } }<CR>";
         "<leader>zt" = "<Cmd>ZkTags<CR>";
@@ -201,7 +207,8 @@
 
       toolPackages.mdformat = with pkgs.python3.pkgs;
         mdformat.withPlugins [
-          mdformat-gfm
+          # TODO: broken with update of mdformat
+          # mdformat-gfm
           mdformat-frontmatter
           mdformat-footnote
           mdformat-tables
@@ -513,22 +520,44 @@
           };
         };
         taplo.enable = true;
+        lemminx.enable = true;
+        ltex = {
+          enable = true;
+          onAttach.function = ''
+            require("ltex_extra").setup{
+              load_langs = { "en-US", "fr-FR" },
+              path = ".ltex",
+            }
+          '';
+          filetypes = [
+            "bib"
+            "gitcommit"
+            "markdown"
+            "org"
+            "plaintex"
+            "rst"
+            "rnoweb"
+            "tex"
+            "pandoc"
+            "typst"
+            #"mail"
+          ];
+        };
       };
     };
 
     #plugins.typst-vim.enable = true;
 
-    plugins.rust-tools = {
+    plugins.rustaceanvim = {
       enable = true;
-      inlayHints = {
-        maxLenAlign = true;
-      };
 
       server = {
-        cargo.features = "all";
-        checkOnSave = true;
-        check.command = "clippy";
-        rustc.source = "discover";
+        settings = {
+          cargo.features = "all";
+          checkOnSave = true;
+          check.command = "clippy";
+          rustc.source = "discover";
+        };
       };
     };
 
@@ -628,6 +657,27 @@
 
     extraConfigLuaPost = ''
       require("luasnip.loaders.from_snipmate").lazy_load()
+
+      vim.api.nvim_create_user_command("LtexLangChangeLanguage", function(data)
+          local language = data.fargs[1]
+          local bufnr = vim.api.nvim_get_current_buf()
+          local client = vim.lsp.get_active_clients({ bufnr = bufnr, name = 'ltex' })
+          if #client == 0 then
+              vim.notify("No ltex client attached")
+          else
+              client = client[1]
+              client.config.settings = {
+                  ltex = {
+                      language = language
+                  }
+              }
+              client.notify('workspace/didChangeConfiguration', client.config.settings)
+              vim.notify("Language changed to " .. language)
+          end
+        end, {
+          nargs = 1,
+          force = true,
+      })
 
       -- local null_ls = require("null-ls")
       -- local helpers = require("null-ls.helpers")

@@ -133,8 +133,8 @@
       url = "github:nvim-lua/plenary.nvim";
       flake = false;
     };
-    "plugin:rust-tools-nvim" = {
-      url = "github:simrat39/rust-tools.nvim";
+    "plugin:rustaceanvim" = {
+      url = "github:mrcjkb/rustaceanvim";
       flake = false;
     };
     "plugin:telescope-nvim" = {
@@ -203,6 +203,14 @@
     };
     "plugin:efmls-configs-nvim" = {
       url = "github:creativenull/efmls-configs-nvim";
+      flake = false;
+    };
+    "plugin:vim-just" = {
+      url = "github:NoahTheDuke/vim-just/";
+      flake = false;
+    };
+    "plugin:ltex_extra-nvim" = {
+      url = "github:barreiroleo/ltex_extra.nvim";
       flake = false;
     };
 
