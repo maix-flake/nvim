@@ -298,11 +298,12 @@
         formatStdin = true,
       }
     '';
+    # plugins.cmp.settings.snippet.expand= "luasnip";
 
     plugins.nvim-cmp = {
-      enable = true;
+      enable = false;
 
-      snippet.expand = "luasnip";
+      # settings.snippet.expand = "luasnip";
 
       mapping = {
         "<CR>" = "cmp.mapping.confirm({select = true })";
@@ -339,14 +340,14 @@
         "<Up>" = "cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), {'i'})";
       };
 
-      sources = [
+      /*settings.sources = [
         {name = "luasnip";}
         {name = "nvim_lsp";}
         {name = "path";}
         {name = "buffer";}
         {name = "calc";}
         {name = "zsh";}
-      ];
+      ];*/
     };
 
     plugins.telescope = {
