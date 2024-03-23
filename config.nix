@@ -300,54 +300,64 @@
     '';
     # plugins.cmp.settings.snippet.expand= "luasnip";
 
-    plugins.nvim-cmp = {
-      enable = false;
+    plugins.cmp = {
+      enable = true;
 
-      # settings.snippet.expand = "luasnip";
+      settings = {
+        snippet.expand = ''
+          function(args)
+            require('luasnip').lsp_expand(args.body)
+          end
+        '';
+        mapping = {
+          "<CR>" = "cmp.mapping.confirm({select = true })";
+          "<C-d>" = "cmp.mapping.scroll_docs(-4)";
+          "<C-f>" = "cmp.mapping.scroll_docs(4)";
+          "<C-Space>" = "cmp.mapping.complete()";
+          "<Tab>" = ''
+            cmp.mapping(function(fallback)
+              if cmp.visible() then
+                cmp.select_next_item()
+              -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+              -- they way you will only jump inside the snippet region
+              elseif luasnip.expand_or_locally_jumpable() then
+                luasnip.expand_or_jump()
+              elseif has_words_before() then
+                cmp.complete()
+              else
+                fallback()
+              end
+            end, { "i", "s" })
+          '';
+          "<S-Tab>" = ''
+            cmp.mapping(function(fallback)
+              if cmp.visible() then
+                cmp.select_prev_item()
+              elseif luasnip.jumpable(-1) then
+                luasnip.jump(-1)
+              else
+                fallback()
+              end
+            end, { "i", "s" })
+          '';
+          "<Down>" = "cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), {'i'})";
+          "<Up>" = "cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), {'i'})";
+        };
 
-      mapping = {
-        "<CR>" = "cmp.mapping.confirm({select = true })";
-        "<C-d>" = "cmp.mapping.scroll_docs(-4)";
-        "<C-f>" = "cmp.mapping.scroll_docs(4)";
-        "<C-Space>" = "cmp.mapping.complete()";
-        "<Tab>" = ''
-          cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_next_item()
-            -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-            -- they way you will only jump inside the snippet region
-            elseif luasnip.expand_or_locally_jumpable() then
-              luasnip.expand_or_jump()
-            elseif has_words_before() then
-              cmp.complete()
-            else
-              fallback()
-            end
-          end, { "i", "s" })
-        '';
-        "<S-Tab>" = ''
-          cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { "i", "s" })
-        '';
-        "<Down>" = "cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), {'i'})";
-        "<Up>" = "cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), {'i'})";
+        sources = [
+          {name = "luasnip";}
+          {name = "nvim_lsp";}
+          {name = "path";}
+          {name = "buffer";}
+          {name = "calc";}
+        ];
       };
 
-      /*settings.sources = [
-        {name = "luasnip";}
-        {name = "nvim_lsp";}
-        {name = "path";}
-        {name = "buffer";}
-        {name = "calc";}
-        {name = "zsh";}
-      ];*/
+      filetype.sh = {
+        sources = [
+          {name = "zsh";}
+        ];
+      };
     };
 
     plugins.telescope = {
@@ -518,6 +528,29 @@
         efm.extraOptions = {
           init_options = {
             documentFormatting = true;
+          };
+          settings = {
+            logLevel = 1;
+            languages.meson = [
+              (helpers.mkRaw (helpers.toLuaObject {
+                prefix = "muon-fmt";
+                formatCommand = "muon fmt -";
+                formatStdin = true;
+              }))
+              (helpers.mkRaw (helpers.toLuaObject {
+                prefix = "muon-analyze";
+                lintSource = "efm/muon-analyze";
+                lintCommand = "muon analyze -l";
+                lintWorkspace = true;
+                lintStdin = false;
+                LintIgnoreExitCode = true;
+                rootMarkers = ["meson_options.txt" ".git"];
+                lintFormats = [
+                  "%f:%l:%c: %trror %m"
+                  "%f:%l:%c: %tarning %m"
+                ];
+              }))
+            ];
           };
         };
         taplo.enable = true;
@@ -774,6 +807,7 @@
       sca2d
       */
       djlint
+      muon
     ];
 
     extraPlugins = with pkgs.vimPlugins; [
