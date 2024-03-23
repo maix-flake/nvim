@@ -175,11 +175,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1710974515,
-        "narHash": "sha256-jZpdsypecYTOO9l12Vy77otGmh9uz8tGzcguifA30Vs=",
+        "lastModified": 1711133180,
+        "narHash": "sha256-WJOahf+6115+GMl3wUfURu8fszuNeJLv9qAWFQl3Vmo=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "1c2acec99933f9835cc7ad47e35303de92d923a4",
+        "rev": "1c2c5e4cabba4c43504ef0f8cc3f3dfa284e2dbb",
         "type": "github"
       },
       "original": {
@@ -199,11 +199,11 @@
       },
       "locked": {
         "dir": "contrib",
-        "lastModified": 1711153617,
-        "narHash": "sha256-qLdFICem/jTNSp8Ts0rNus8iqlsF1oQs6mIhj2GhKFs=",
+        "lastModified": 1711197372,
+        "narHash": "sha256-cJqAkYxZkpE2C6ngnu4sKqUGSAwtD++6Ix44bfdgO4E=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "a629888427d7dfd1b45d4cc456f9c6c7a7d5a854",
+        "rev": "2c1e8f7e96926f70151d737ea32f1e6ff3589263",
         "type": "github"
       },
       "original": {
@@ -333,11 +333,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1711124705,
-        "narHash": "sha256-vgFQxvs6T9RcaV9sd9Io+RxQuRKovauMvueGajWWanw=",
+        "lastModified": 1711199922,
+        "narHash": "sha256-Oz5WNOPp95K4JLyoNQKyEdaUM5JzliC62jwTpGPqYNE=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "822ec15646b8f7b621468b503118921d644acf39",
+        "rev": "7170aad28139cd3629b2b6ce4c9272bf41c2ad45",
         "type": "github"
       },
       "original": {
@@ -838,11 +838,11 @@
     "plugin:nvim-treesitter": {
       "flake": false,
       "locked": {
-        "lastModified": 1711128672,
-        "narHash": "sha256-Ugpkw3M0/OIhINrqmhpLm7wMDZv22Hjh4rT3PJUs1V8=",
+        "lastModified": 1711184208,
+        "narHash": "sha256-ggsSzf14dHYeOM/NKqcjA5b8iT/OA8kQpIIlf+rQzwY=",
         "owner": "nvim-treesitter",
         "repo": "nvim-treesitter",
-        "rev": "a951dcb7ec253544b0150251008de8b06a0874cd",
+        "rev": "b009aba903565163442f2adecff72bc3193bb8fd",
         "type": "github"
       },
       "original": {
@@ -886,32 +886,16 @@
     "plugin:nvim-web-devicons": {
       "flake": false,
       "locked": {
-        "lastModified": 1710551591,
-        "narHash": "sha256-3AKsnCvNiQloFfgFKsAHTga0rEEfL8TGmN0BEeO0EQ0=",
+        "lastModified": 1711165838,
+        "narHash": "sha256-6XCOir4E5l32xxIBKAAeRY7nEHLxJXup39CDPqFHckE=",
         "owner": "nvim-tree",
         "repo": "nvim-web-devicons",
-        "rev": "cb0c967c9723a76ccb1be0cc3a9a10e577d2f6ec",
+        "rev": "585b2dc4bba2b5973f2b1d3e576709af5ac34fb6",
         "type": "github"
       },
       "original": {
         "owner": "nvim-tree",
         "repo": "nvim-web-devicons",
-        "type": "github"
-      }
-    },
-    "plugin:openscad-nvim": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1710237275,
-        "narHash": "sha256-MGzfju/rXJubz9HHPlp7w9Vh9XHwdxG0le4qcMyGfdA=",
-        "owner": "salkin-mada",
-        "repo": "openscad.nvim",
-        "rev": "5c35ce921a63d59f2a0bb20d872c15a0d4c8aa72",
-        "type": "github"
-      },
-      "original": {
-        "owner": "salkin-mada",
-        "repo": "openscad.nvim",
         "type": "github"
       }
     },
@@ -998,11 +982,11 @@
     "plugin:telescope-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1710983957,
-        "narHash": "sha256-7dNteBl4vCkJCSM9xVO3YwyyGI1A5x2ksFHQlP8wamE=",
+        "lastModified": 1711166216,
+        "narHash": "sha256-h/JOvPaULu86wNU1S6sKA1un27OxKYAkb6Q2pqjOqFI=",
         "owner": "nvim-telescope",
         "repo": "telescope.nvim",
-        "rev": "221778e93bfaa58bce4be4e055ed2edecc26f799",
+        "rev": "1e591885751d255b12c3649253cb6c2838e2c724",
         "type": "github"
       },
       "original": {
@@ -1234,7 +1218,6 @@
         "plugin:nvim-treesitter-context": "plugin:nvim-treesitter-context",
         "plugin:nvim-treesitter-refactor": "plugin:nvim-treesitter-refactor",
         "plugin:nvim-web-devicons": "plugin:nvim-web-devicons",
-        "plugin:openscad-nvim": "plugin:openscad-nvim",
         "plugin:plantuml-syntax": "plugin:plantuml-syntax",
         "plugin:plenary-nvim": "plugin:plenary-nvim",
         "plugin:popup-nvim": "plugin:popup-nvim",

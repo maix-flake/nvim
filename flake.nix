@@ -162,10 +162,10 @@
       url = "github:nvim-treesitter/nvim-treesitter";
       flake = false;
     };
-    "plugin:openscad-nvim" = {
-      url = "github:salkin-mada/openscad.nvim";
-      flake = false;
-    };
+    #"plugin:openscad-nvim" = {
+    #  url = "github:salkin-mada/openscad.nvim";
+    #  flake = false;
+    #};
     "plugin:neo-tree-nvim" = {
       url = "github:nvim-neo-tree/neo-tree.nvim";
       flake = false;
@@ -247,7 +247,9 @@
             ./plugins/lsp-signature.nix
             ./modules
           ];
-          package = neovim-flake.packages."${system}".neovim.overrideAttrs (
+          package = neovim-flake.packages."${system}".neovim;
+          /*
+            .overrideAttrs (
             o: let
               version = "0.20.9";
               sha256 = "sha256-NxWqpMNwu5Ajffw1E2q9KS4TgkCH6M+ctFyi9Jp0tqQ=";
@@ -273,6 +275,7 @@
               buildInputs = [tree-sitter] ++ o.buildInputs;
             }
           );
+          */
         };
 
         inputsMatching = prefix:
@@ -294,8 +297,8 @@
                 // (pkgs.lib.mapAttrs (
                   pname: src:
                     prev.vimPlugins."${pname}".overrideAttrs (old: {
+                      inherit src;
                       version = src.shortRev;
-                      src = src;
                     })
                 ) (inputsMatching "plugin"))
                 // (
@@ -313,9 +316,6 @@
               vimPlugins =
                 prev.vimPlugins
                 // {
-                  openscad-nvim = prev.vimPlugins.openscad-nvim.overrideAttrs (_: {
-                    patches = [./patches/openscad_program_paths.patch];
-                  });
                   nvim-treesitter = prev.vimPlugins.nvim-treesitter.overrideAttrs (
                     prev.callPackage ./nvim-treesitter/override.nix {} final.vimPlugins prev.vimPlugins
                   );
@@ -324,7 +324,8 @@
             (final: prev: {
               norminette = norminette-lsp.packages."${system}".default;
             })
-            (final: prev: let
+            /*
+              (final: prev: let
               version = "0.20.9";
               sha256 = "sha256-NxWqpMNwu5Ajffw1E2q9KS4TgkCH6M+ctFyi9Jp0tqQ=";
               src = pkgs.fetchFromGitHub {
@@ -353,6 +354,7 @@
                 buildInputs = [tree-sitter] ++ o.buildInputs;
               });
             })
+            */
             (final: prev: {
               neovim-libvterm = prev.neovim-libvterm.overrideAttrs (_: {
                 src = neovim-libvterm-src;
