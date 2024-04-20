@@ -73,8 +73,7 @@
       updatetime = 100;
       colorcolumn = "80";
       spell = false;
-      #list = true;
-      #listchars = "tab:>-,lead:·,nbsp:␣,trail:•";
+      list = true;
       listchars = "tab:󰁔 ,lead:·,nbsp:␣,trail:•";
       fsync = true;
 
@@ -133,66 +132,84 @@
             then {inherit action;}
             else action
           ));
+      all_mode = modeKeys ["n" "v" "i"];
       nm = modeKeys ["n"];
       vs = modeKeys ["v"];
       im = modeKeys ["i"];
     in
-      helpers.keymaps.mkKeymaps {options.silent = true;} (nm {
-        "ft" = "<cmd>Neotree<CR>";
-        "fG" = "<cmd>Neotree git_status<CR>";
-        "fR" = "<cmd>Neotree remote<CR>";
-        "fc" = "<cmd>Neotree close<CR>";
-        "bp" = "<cmd>Telescope buffers<CR>";
+      helpers.keymaps.mkKeymaps {options.silent = true;} (
+        (all_mode {
+          "<A-Left>" = "<C-w><Left>";
+          "<A-Right>" = "<C-w><Right>";
+          "<A-Up>" = "<C-w><Up>";
+          "<A-Down>" = "<C-w><Down>";
+          "<S-A-Left>" = "<C-w><";
+          "<S-A-Right>" = "<C-w>>";
+          "<S-A-Up>" = "<C-w>+";
+          "<S-A-Down>" = "<C-w>-";
+        })
+        ++ (
+          nm {
+            "ft" = "<cmd>Neotree<CR>";
+            "fG" = "<cmd>Neotree git_status<CR>";
+            "fR" = "<cmd>Neotree remote<CR>";
+            "fc" = "<cmd>Neotree close<CR>";
+            "bp" = "<cmd>Telescope buffers<CR>";
 
-        "<C-s>" = "<cmd>w<CR>";
-        "<F1>" = "<cmd>:Stdheader<CR>";
+            "<C-s>" = "<cmd>w<CR>";
+            "<F1>" = "<cmd>:Stdheader<CR>";
 
-        "mk" = "<cmd>Telescope keymaps<CR>";
-        "fg" = "<cmd>Telescope git_files<CR>";
-        "gr" = "<cmd>Telescope lsp_references<CR>";
-        "gI" = "<cmd>Telescope lsp_implementations<CR>";
-        "gW" = "<cmd>Telescope lsp_workspace_symbols<CR>";
-        "gF" = "<cmd>Telescope lsp_document_symbols<CR>";
-        "ge" = "<cmd>Telescope diagnostics bufnr=0<CR>";
-        "gE" = "<cmd>Telescope diagnostics<CR>";
+            "mk" = "<cmd>Telescope keymaps<CR>";
+            "fg" = "<cmd>Telescope git_files<CR>";
+            "gr" = "<cmd>Telescope lsp_references<CR>";
+            "gI" = "<cmd>Telescope lsp_implementations<CR>";
+            "gW" = "<cmd>Telescope lsp_workspace_symbols<CR>";
+            "gF" = "<cmd>Telescope lsp_document_symbols<CR>";
+            "ge" = "<cmd>Telescope diagnostics bufnr=0<CR>";
+            "gE" = "<cmd>Telescope diagnostics<CR>";
 
-        "<leader>h" = {
-          action = "<cmd>lua vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())<CR>";
-          options = {
-            desc = "toggle inlay hints";
-          };
-        };
-        "<leader>zn" = "<Cmd>ZkNew { title = vim.fn.input('Title: ') }<CR>";
-        "<leader>zo" = "<Cmd>ZkNotes { sort = { 'modified' } }<CR>";
-        "<leader>zt" = "<Cmd>ZkTags<CR>";
-        "<leader>zf" = "<Cmd>ZkNotes { sort = { 'modified' }, match = { vim.fn.input('Search: ') } }<CR>";
-        "yH" = {
-          action = "<Cmd>Telescope yank_history<CR>";
-          options.desc = "history";
-        };
-      })
-      ++ (vs {
-        "<leader>zf" = "'<,'>ZkMatch<CR>";
-        "x" = "dl<CR>";
-        "<F1>" = "<cmd>:Stdheader<CR>";
-      })
-      ++ (im {
-        "<C-s>" = "<cmd>w<CR>";
-        "<F1>" = "<cmd>:Stdheader<CR>";
-      })
-      ++ [
-        {
-          key = "<leader>rn";
-          mode = ["n"];
-          action = ''
-            function()
-            	return ":IncRename " .. vim.fn.expand("<cword>")
-            end
-          '';
-          lua = true;
-          options.expr = true;
-        }
-      ];
+            "<leader>h" = {
+              action = "<cmd>lua vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())<CR>";
+              options = {
+                desc = "toggle inlay hints";
+              };
+            };
+            "<leader>zn" = "<Cmd>ZkNew { title = vim.fn.input('Title: ') }<CR>";
+            "<leader>zo" = "<Cmd>ZkNotes { sort = { 'modified' } }<CR>";
+            "<leader>zt" = "<Cmd>ZkTags<CR>";
+            "<leader>zf" = "<Cmd>ZkNotes { sort = { 'modified' }, match = { vim.fn.input('Search: ') } }<CR>";
+            "yH" = {
+              action = "<Cmd>Telescope yank_history<CR>";
+              options.desc = "history";
+            };
+            "<C-:>" = "<Plug>(comment_toggle_linewise_current)";
+          }
+        )
+        ++ (vs {
+          "<leader>zf" = "'<,'>ZkMatch<CR>";
+          "x" = "dl<CR>";
+          "<F1>" = "<cmd>:Stdheader<CR>";
+          "<C-:>" = "<Plug>(comment_toggle_linewise_visual)";
+        })
+        ++ (im {
+          "<C-s>" = "<cmd>w<CR>";
+          "<F1>" = "<cmd>:Stdheader<CR>";
+          "<C-:>" = "<Plug>(comment_toggle_linewise_current)";
+        })
+        ++ [
+          {
+            key = "<leader>rn";
+            mode = ["n"];
+            action = ''
+              function()
+              	return ":IncRename " .. vim.fn.expand("<cword>")
+              end
+            '';
+            lua = true;
+            options.expr = true;
+          }
+        ]
+      );
 
     clipboard.providers.wl-copy.enable = true;
 
@@ -363,8 +380,8 @@
     plugins.telescope = {
       enable = true;
       enabledExtensions = ["ui-select"];
-      extensionConfig = {
-        ui-select = {
+      settings = {
+        defaults.ui-select = {
           __raw = ''
               require("telescope.themes").get_dropdown {
               -- even more opts
@@ -454,6 +471,10 @@
       enable = true;
     };
 
+    plugins.ts-context-commentstring = {
+      enable = true;
+    };
+
     plugins.vim-matchup = {
       treesitterIntegration = {
         enable = true;
@@ -463,8 +484,16 @@
     };
     plugins.headerguard.enable = true;
 
-    plugins.comment-nvim = {
+    plugins.comment = {
       enable = true;
+      settings = {
+        mappings = {
+          extra = false;
+          basic = false;
+        };
+        pre_hook = "require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()";
+      };
+      #settings.toggler.line = "<C-:>";
     };
 
     plugins.neo-tree = {
