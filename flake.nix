@@ -2,18 +2,18 @@
   description = "A very basic flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs";
     nixvim = {
       url = "github:nix-community/nixvim";
       #url = "github:maix0/nixvim";
       #url = "/home/maix/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
+      #inputs.nixpkgs.follows = "nixpkgs";
     };
-    neovim-flake = {
-      url = "github:neovim/neovim?dir=contrib";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
-    };
+    # neovim-flake = {
+    #   url = "github:neovim/neovim?dir=contrib";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    #   inputs.flake-utils.follows = "flake-utils";
+    # };
     flake-utils.url = "github:numtide/flake-utils";
 
     norminette-lsp = {
@@ -231,7 +231,6 @@
     self,
     nixpkgs,
     nixvim,
-    neovim-flake,
     flake-utils,
     norminette-lsp,
     neovim-libvterm-src,
@@ -247,7 +246,7 @@
             ./plugins/lsp-signature.nix
             ./modules
           ];
-          package = neovim-flake.packages."${system}".neovim;
+          #package = neovim-flake.packages."${system}".neovim;
           /*
             .overrideAttrs (
             o: let
@@ -313,15 +312,6 @@
             })
 
             (final: prev: {
-              vimPlugins =
-                prev.vimPlugins
-                // {
-                  nvim-treesitter = prev.vimPlugins.nvim-treesitter.overrideAttrs (
-                    prev.callPackage ./nvim-treesitter/override.nix {} final.vimPlugins prev.vimPlugins
-                  );
-                };
-            })
-            (final: prev: {
               norminette = norminette-lsp.packages."${system}".default;
             })
             /*
@@ -380,47 +370,6 @@
           inherit nvim;
           inherit (pkgs.vimPlugins) nvim-treesitter;
           upstream = module.package;
-          update-nvim-treesitter = pkgs.callPackage ./nvim-treesitter {
-            inherit (self.packages."${system}") nvim-treesitter upstream;
-          };
-          efmls-configs-tools-extract = pkgs.callPackage ({
-            stdenv,
-            python3,
-          }:
-            stdenv.mkDerivation {
-              pname = "efmls-configs-tools-extract";
-              version = "1";
-
-              src = ./efmls-extract.py;
-
-              dontUnpack = true;
-              dontBuild = true;
-
-              buildInputs = [python3];
-
-              installPhase = ''
-                mkdir -p $out/bin
-                cat $src > $out/bin/efmls-extract.py
-                chmod +x $out/bin/efmls-extract.py
-              '';
-            }) {};
-          efmls-configs-tools = pkgs.callPackage ({stdenv}:
-            stdenv.mkDerivation {
-              pname = "efmls-configs";
-
-              inherit (pkgs.vimPlugins.efmls-configs-nvim) src version;
-
-              nativeBuildInputs = [self.packages."${system}".efmls-configs-tools-extract];
-
-              buildPhase = ''
-                efmls-extract.py ./lua/efmls-configs > efmls-configs-tools.json
-              '';
-
-              installPhase = ''
-                mkdir -p $out
-                mv efmls-configs-tools.json $out
-              '';
-            }) {};
           default = nvim;
         };
       });
