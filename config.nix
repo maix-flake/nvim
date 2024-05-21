@@ -551,7 +551,13 @@
         };
         bashls.enable = true;
         dartls.enable = true;
-        clangd.enable = true;
+        clangd = {
+          enable = true;
+          onAttach.function = ''
+            require("clangd_extensions.inlay_hints").setup_autocmd()
+            require("clangd_extensions.inlay_hints").set_inlay_hints()
+          '';
+        };
         #typst-lsp.enable = true;
         tsserver.enable = true;
         efm.extraOptions = {
@@ -647,6 +653,11 @@
     plugins.clangd-extensions = {
       enable = true;
       enableOffsetEncodingWorkaround = true;
+      inlayHints = {
+        rightAlign = true;
+        rightAlignPadding = 4;
+        inline = "true";
+      };
 
       ast = {
         roleIcons = {
@@ -741,36 +752,8 @@
           nargs = 1,
           force = true,
       })
-
-      -- local null_ls = require("null-ls")
-      -- local helpers = require("null-ls.helpers")
-      --
-      -- local sca2d = {
-      --   method = null_ls.methods.DIAGNOSTICS,
-      --   filetypes = { "openscad" },
-      --   generator = null_ls.generator({
-      --     command = "sca2d",
-      --     args = { "$FILENAME" },
-      --     from_stderr = false,
-      --     to_stdin = true,
-      --     format = "line",
-      --     check_exit_code = function(code)
-      --       return code <= 1
-      --     end,
-      --     on_output = helpers.diagnostics.from_pattern(
-      --       [[[^:]+:(%d+):(%d+): (%w)%d+: (.*)]], {"row", "col", "severity", "message"}, {
-      --         severities = {
-      --           F = helpers.diagnostics.severities["error"],
-      --           E = helpers.diagnostics.severities["error"],
-      --           W = helpers.diagnostics.severities["warning"],
-      --           D = helpers.diagnostics.severities["warning"],
-      --           I = helpers.diagnostics.severities["info"],
-      --         },
-      --     }),
-      --   }),
-      -- }
-
-      -- null_ls.register(sca2d)
+      require("clangd_extensions.inlay_hints").setup_autocmd()
+      require("clangd_extensions.inlay_hints").set_inlay_hints()
     '';
 
     plugins.zk = {
