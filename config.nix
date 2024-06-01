@@ -422,13 +422,16 @@
         devicetree
         diff
         dockerfile
+        doxygen
+        git_rebase
         gitattributes
         gitcommit
         gitignore
-        git_rebase
         groovy
         html
         ini
+        javascript
+        jsdoc
         json
         lalrpop
         latex
@@ -447,6 +450,7 @@
         sql
         tlaplus
         toml
+        typescript
         vim
         vimdoc
         yaml
