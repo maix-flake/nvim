@@ -7,7 +7,7 @@
 }: {
   config = {
     colorschemes.tokyonight = {
-      style = "night";
+      settings.style = "night";
       enable = true;
     };
 
@@ -61,7 +61,7 @@
       mail42 = "maiboyer@student.42.fr";
     };
 
-    options = {
+    opts = {
       termguicolors = true;
       number = true;
       tabstop = 4;
@@ -169,7 +169,7 @@
             "gE" = "<cmd>Telescope diagnostics<CR>";
 
             "<leader>h" = {
-              action = "<cmd>lua vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())<CR>";
+              action = "<cmd>ClangdToggleInlayHints<CR>";
               options = {
                 desc = "toggle inlay hints";
               };
@@ -200,12 +200,11 @@
           {
             key = "<leader>rn";
             mode = ["n"];
-            action = ''
+            action = helpers.mkRaw ''
               function()
               	return ":IncRename " .. vim.fn.expand("<cword>")
               end
             '';
-            lua = true;
             options.expr = true;
           }
         ]
@@ -381,16 +380,14 @@
       enable = true;
       enabledExtensions = ["ui-select"];
       settings = {
-        defaults.ui-select = {
-          __raw = ''
-              require("telescope.themes").get_dropdown {
+        defaults = {
+          layout_strategy = "vertical";
+          ui-select = helpers.mkRaw ''
+            require("telescope.themes").get_dropdown {
               -- even more opts
             }
           '';
         };
-      };
-      extraOptions = {
-        defaults.layout_strategy = "vertical";
       };
     };
 
@@ -509,10 +506,9 @@
     plugins.indent-blankline = {
       enable = true;
 
-      scope = {
+      settings.scope = {
         enabled = true;
-
-        showStart = true;
+        show_start = true;
       };
     };
 
@@ -623,14 +619,11 @@
 
     plugins.rustaceanvim = {
       enable = true;
-
-      server = {
-        settings = {
-          cargo.features = "all";
-          checkOnSave = true;
-          check.command = "clippy";
-          rustc.source = "discover";
-        };
+      settings.server.settings = {
+        cargo.features = "all";
+        checkOnSave = true;
+        check.command = "clippy";
+        rustc.source = "discover";
       };
     };
 
