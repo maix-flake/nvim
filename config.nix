@@ -61,7 +61,7 @@
       mail42 = "maiboyer@student.42.fr";
     };
 
-    opts = {
+    options = {
       termguicolors = true;
       number = true;
       tabstop = 4;
