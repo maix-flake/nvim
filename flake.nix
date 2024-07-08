@@ -374,7 +374,7 @@
         packages = {
           inherit nvim;
           inherit (pkgs.vimPlugins) nvim-treesitter;
-          upstream = module.package;
+          #upstream = module.package;
           default = nvim;
         };
       });
