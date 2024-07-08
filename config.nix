@@ -216,12 +216,6 @@
 
     clipboard.providers.wl-copy.enable = true;
 
-    plugins.nvim-osc52 = {
-      enable = true;
-      package = pkgs.vimPlugins.nvim-osc52;
-      keymaps.enable = true;
-    };
-
     plugins.efmls-configs = {
       enable = true;
 
@@ -395,17 +389,19 @@
       };
     };
 
+    /*
     extraFiles."queries/rust/injections.scm" = ''
-      ;; extends
+    ;; extends
 
-      (
-        (macro_invocation
-          macro: ((scoped_identifier) @_sql_def)
-          (token_tree (string_literal) @sql))
+    (
+      (macro_invocation
+        macro: ((scoped_identifier) @_sql_def)
+        (token_tree (string_literal) @sql))
 
-        (#eq? @_sql_def "sqlx::query")
-      )
+      (#eq? @_sql_def "sqlx::query")
+    )
     '';
+    */
 
     plugins.treesitter = {
       enable = true;
@@ -747,7 +743,7 @@
 
     plugins.zk = {
       enable = true;
-      picker = "telescope";
+      settings.picker = "telescope";
     };
 
     plugins.which-key.enable = true;
@@ -757,10 +753,8 @@
 
     plugins.yanky = {
       enable = true;
-      picker.telescope = {
-        useDefaultMappings = true;
-        enable = true;
-      };
+      enableTelescope = true;
+      settings.picker.telescope.use_default_mappings = true;
     };
 
     files."ftplugin/nix.lua" = {
