@@ -119,6 +119,10 @@
       extension = {
         lalrpop = "lalrpop";
       };
+      extension = {
+        c__TEMPLATE__ = "c";
+        h__TEMPLATE__ = "c";
+      };
     };
 
     keymaps = let
@@ -198,7 +202,7 @@
         })
         ++ [
           {
-            key = "<leader>rn";
+            key = "<leader>r";
             mode = ["n"];
             action = helpers.mkRaw ''
               function()
@@ -539,10 +543,6 @@
         dartls.enable = true;
         clangd = {
           enable = true;
-          onAttach.function = ''
-            require("clangd_extensions.inlay_hints").setup_autocmd()
-            require("clangd_extensions.inlay_hints").set_inlay_hints()
-          '';
         };
         #typst-lsp.enable = true;
         tsserver.enable = true;

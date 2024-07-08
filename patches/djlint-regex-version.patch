@@ -1,0 +1,13 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 5588697..3dba4be 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -30,7 +30,7 @@ python = "^3.8.0,<4.0"
+ click = "^8.0.1"
+ PyYAML = "^6.0"
+ colorama = "^0.4.4"
+-regex = "^2023.0.0"
++regex = "^2024.0.0"
+ tqdm = "^4.62.2"
+ tomli = { version = "^2.0.1", python = "<3.11" }
+ pathspec = "^0.12.0"

@@ -314,6 +314,11 @@
             (final: prev: {
               norminette = norminette-lsp.packages."${system}".default;
             })
+            (final: prev: {
+              djlint = prev.djlint.overrideAttrs {
+                patches = [./patches/djlint-regex-version.patch];
+              };
+            })
             /*
               (final: prev: let
               version = "0.20.9";
