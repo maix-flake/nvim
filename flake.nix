@@ -58,10 +58,6 @@
       url = "github:numtostr/comment.nvim";
       flake = false;
     };
-    "plugin:firenvim" = {
-      url = "github:glacambre/firenvim";
-      flake = false;
-    };
     "plugin:git-messenger-vim" = {
       url = "github:rhysd/git-messenger.vim";
       flake = false;
@@ -241,7 +237,7 @@
         module = {
           imports = [
             ./config.nix
-            ./plugins/firenvim.nix
+            # ./plugins/firenvim.nix
             ./plugins/headerguard.nix
             ./plugins/lsp-signature.nix
             ./modules
