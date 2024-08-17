@@ -92,24 +92,6 @@
         "type": "github"
       }
     },
-    "flake-utils_3": {
-      "inputs": {
-        "systems": "systems_3"
-      },
-      "locked": {
-        "lastModified": 1710146030,
-        "narHash": "sha256-SZ5L6eA7HJ/nmkzGG7/ISclqe6oZdOZTNoesiInkXPQ=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "b1d9ab70662946ef0850d488da1c9019f3a9752a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
     "git-hooks": {
       "inputs": {
         "flake-compat": [
@@ -183,22 +165,6 @@
         "type": "github"
       }
     },
-    "neovim-libvterm-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1721873632,
-        "narHash": "sha256-/ySBEVsnEfaV3OzZCVctD4lStCPYRQGzcIxhwCAuPVM=",
-        "owner": "neovim",
-        "repo": "libvterm",
-        "rev": "2c01e1f55458c02ca9128bcc4d1ea1aedf1834bc",
-        "type": "github"
-      },
-      "original": {
-        "owner": "neovim",
-        "repo": "libvterm",
-        "type": "github"
-      }
-    },
     "new-plugin:ft-std-header": {
       "flake": false,
       "locked": {
@@ -252,28 +218,6 @@
         "type": "github"
       }
     },
-    "nix-github-actions": {
-      "inputs": {
-        "nixpkgs": [
-          "norminette-lsp",
-          "poetry2nix",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1703863825,
-        "narHash": "sha256-rXwqjtwiGKJheXB43ybM8NwWB8rO2dSRrEqes0S7F5Y=",
-        "owner": "nix-community",
-        "repo": "nix-github-actions",
-        "rev": "5163432afc817cf8bd1f031418d1869e4c9d5547",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "nix-github-actions",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1723897243,
@@ -289,22 +233,6 @@
         "type": "github"
       }
     },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1723175592,
-        "narHash": "sha256-M0xJ3FbDUc4fRZ84dPGx5VvgFsOzds77KiBMW/mMTnI=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "5e0ca22929f3342b19569b21b2f3462f053e497b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixvim": {
       "inputs": {
         "devshell": "devshell",
@@ -313,7 +241,9 @@
         "git-hooks": "git-hooks",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
         "nuschtosSearch": "nuschtosSearch",
         "treefmt-nix": "treefmt-nix"
       },
@@ -328,47 +258,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "nixvim",
-        "type": "github"
-      }
-    },
-    "norminette-lsp": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "norminette-lsp-src": "norminette-lsp-src",
-        "poetry2nix": "poetry2nix"
-      },
-      "locked": {
-        "lastModified": 1723897771,
-        "narHash": "sha256-MQUpcWcH2M93G0hywfvh63TRnyHyDALKiw/jA9BLhtY=",
-        "owner": "Maix0",
-        "repo": "norminette-lsp-flake",
-        "rev": "2380c3d1db3f59fb047ad2a15b1d83971fd7b229",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Maix0",
-        "repo": "norminette-lsp-flake",
-        "type": "github"
-      }
-    },
-    "norminette-lsp-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1696358428,
-        "narHash": "sha256-4g/s+EUwVNbj5w0mjEYuEEOfwk0uZ9M6881rJBKvdL4=",
-        "owner": "bitquence",
-        "repo": "norminette-lsp",
-        "rev": "5bc1f26c0032bc36fac123227fff547a3e69880a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "bitquence",
-        "repo": "norminette-lsp",
         "type": "github"
       }
     },
@@ -1114,40 +1003,13 @@
         "type": "github"
       }
     },
-    "poetry2nix": {
-      "inputs": {
-        "flake-utils": "flake-utils_3",
-        "nix-github-actions": "nix-github-actions",
-        "nixpkgs": [
-          "norminette-lsp",
-          "nixpkgs"
-        ],
-        "systems": "systems_4",
-        "treefmt-nix": "treefmt-nix_2"
-      },
-      "locked": {
-        "lastModified": 1723854676,
-        "narHash": "sha256-+BrHfNuXrqeE7PoV6xDaoh0joYiJkvTTCIV0fFR3THw=",
-        "owner": "nix-community",
-        "repo": "poetry2nix",
-        "rev": "d650118bce34c0238b9b54f23f7f173f9e4db867",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "poetry2nix",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "neovim-libvterm-src": "neovim-libvterm-src",
         "new-plugin:ft-std-header": "new-plugin:ft-std-header",
         "new-plugin:vim-headerguard": "new-plugin:vim-headerguard",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
-        "norminette-lsp": "norminette-lsp",
         "plugin:clangd_extensions-nvim": "plugin:clangd_extensions-nvim",
         "plugin:cmp-buffer": "plugin:cmp-buffer",
         "plugin:cmp-calc": "plugin:cmp-calc",
@@ -1225,35 +1087,6 @@
         "type": "github"
       }
     },
-    "systems_3": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
-    "systems_4": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "id": "systems",
-        "type": "indirect"
-      }
-    },
     "treefmt-nix": {
       "inputs": {
         "nixpkgs": [
@@ -1267,28 +1100,6 @@
         "owner": "numtide",
         "repo": "treefmt-nix",
         "rev": "349de7bc435bdff37785c2466f054ed1766173be",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "treefmt-nix",
-        "type": "github"
-      }
-    },
-    "treefmt-nix_2": {
-      "inputs": {
-        "nixpkgs": [
-          "norminette-lsp",
-          "poetry2nix",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1719749022,
-        "narHash": "sha256-ddPKHcqaKCIFSFc/cvxS14goUhCOAwsM1PbMr0ZtHMg=",
-        "owner": "numtide",
-        "repo": "treefmt-nix",
-        "rev": "8df5ff62195d4e67e2264df0b7f5e8c9995fd0bd",
         "type": "github"
       },
       "original": {

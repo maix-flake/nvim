@@ -3,28 +3,11 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
+    flake-utils.url = "github:numtide/flake-utils";
     nixvim = {
       url = "github:nix-community/nixvim";
-      #url = "github:maix0/nixvim";
-      #url = "/home/maix/nixvim";
-      #inputs.nixpkgs.follows = "nixpkgs";
-    };
-    # neovim-flake = {
-    #   url = "github:neovim/neovim?dir=contrib";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    #   inputs.flake-utils.follows = "flake-utils";
-    # };
-    flake-utils.url = "github:numtide/flake-utils";
-
-    norminette-lsp = {
-      url = "github:Maix0/norminette-lsp-flake";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
     };
-
-    neovim-libvterm-src.url = "github:neovim/libvterm";
-    neovim-libvterm-src.flake = false;
-
     # Plugins in nixpkgs
     "plugin:clangd_extensions-nvim" = {
       url = "github:p00f/clangd_extensions.nvim";
@@ -228,8 +211,6 @@
     nixpkgs,
     nixvim,
     flake-utils,
-    norminette-lsp,
-    neovim-libvterm-src,
     ...
   } @ inputs:
     flake-utils.lib.eachDefaultSystem (system:
@@ -237,40 +218,10 @@
         module = {
           imports = [
             ./config.nix
-            # ./plugins/firenvim.nix
             ./plugins/headerguard.nix
             ./plugins/lsp-signature.nix
             ./modules
           ];
-          #package = neovim-flake.packages."${system}".neovim;
-          /*
-            .overrideAttrs (
-            o: let
-              version = "0.20.9";
-              sha256 = "sha256-NxWqpMNwu5Ajffw1E2q9KS4TgkCH6M+ctFyi9Jp0tqQ=";
-              src = pkgs.fetchFromGitHub {
-                owner = "tree-sitter";
-                repo = "tree-sitter";
-                rev = "v${version}";
-                inherit sha256;
-                fetchSubmodules = true;
-              };
-              tree-sitter = pkgs.tree-sitter.overrideAttrs (drv: rec {
-                name = "tree-sitter";
-                inherit src version;
-                cargoDeps = pkgs.rustPlatform.importCargoLock {
-                  lockFile = pkgs.fetchurl {
-                    url = "https://raw.githubusercontent.com/tree-sitter/tree-sitter/v${version}/Cargo.lock";
-                    sha256 = "sha256-CVxS6AAHkySSYI9vY9k1DLrffZC39nM7Bc01vfjMxWk=";
-                  };
-                  allowBuiltinFetchGit = true;
-                };
-              });
-            in {
-              buildInputs = [tree-sitter] ++ o.buildInputs;
-            }
-          );
-          */
         };
 
         inputsMatching = prefix:
@@ -306,50 +257,10 @@
                   ) (inputsMatching "new-plugin")
                 );
             })
-
-            (final: prev: {
-              norminette = norminette-lsp.packages."${system}".default;
-            })
             (final: prev: {
               djlint = prev.djlint.overrideAttrs {
                 patches = [./patches/djlint-regex-version.patch];
               };
-            })
-            /*
-              (final: prev: let
-              version = "0.20.9";
-              sha256 = "sha256-NxWqpMNwu5Ajffw1E2q9KS4TgkCH6M+ctFyi9Jp0tqQ=";
-              src = pkgs.fetchFromGitHub {
-                owner = "tree-sitter";
-                repo = "tree-sitter";
-                rev = "v${version}";
-                inherit sha256;
-                fetchSubmodules = true;
-              };
-              tree-sitter = pkgs.tree-sitter.overrideAttrs (drv: rec {
-                name = "tree-sitter";
-                inherit src version;
-                cargoDeps = pkgs.rustPlatform.importCargoLock {
-                  lockFile = pkgs.fetchurl {
-                    url = "https://raw.githubusercontent.com/tree-sitter/tree-sitter/v${version}/Cargo.lock";
-                    sha256 = "sha256-CVxS6AAHkySSYI9vY9k1DLrffZC39nM7Bc01vfjMxWk=";
-                  };
-                  allowBuiltinFetchGit = true;
-                };
-              });
-            in {
-              neovim = prev.neovim.overrideAttrs (o: {
-                buildInputs = [tree-sitter] ++ o.buildInputs;
-              });
-              neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (o: {
-                buildInputs = [tree-sitter] ++ o.buildInputs;
-              });
-            })
-            */
-            (final: prev: {
-              neovim-libvterm = prev.neovim-libvterm.overrideAttrs (_: {
-                src = neovim-libvterm-src;
-              });
             })
           ];
         };

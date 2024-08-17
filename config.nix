@@ -27,11 +27,11 @@
           "*.ts"
           "*.tsx"
           "*.c"
-          ".h"
+          "*.h"
           "*.cc"
-          ".hh"
+          "*.hh"
           "*.cpp"
-          ".cph"
+          "*.cph"
         ];
         group = "BigFileOptimizer";
         callback = helpers.mkRaw ''
@@ -173,32 +173,30 @@
             "gE" = "<cmd>Telescope diagnostics<CR>";
 
             "<leader>h" = {
-              action = "<cmd>ClangdToggleInlayHints<CR>";
+              action = "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<CR>";
               options = {
                 desc = "toggle inlay hints";
               };
             };
-            "<leader>zn" = "<Cmd>ZkNew { title = vim.fn.input('Title: ') }<CR>";
-            "<leader>zo" = "<Cmd>ZkNotes { sort = { 'modified' } }<CR>";
-            "<leader>zt" = "<Cmd>ZkTags<CR>";
-            "<leader>zf" = "<Cmd>ZkNotes { sort = { 'modified' }, match = { vim.fn.input('Search: ') } }<CR>";
             "yH" = {
               action = "<Cmd>Telescope yank_history<CR>";
               options.desc = "history";
             };
             "<C-:>" = "<Plug>(comment_toggle_linewise_current)";
+            "<C-/>" = "<Plug>(comment_toggle_linewise_current)";
           }
         )
         ++ (vs {
-          "<leader>zf" = "'<,'>ZkMatch<CR>";
           "x" = "dl<CR>";
           "<F1>" = "<cmd>:Stdheader<CR>";
           "<C-:>" = "<Plug>(comment_toggle_linewise_visual)";
+          "<C-/>" = "<Plug>(comment_toggle_linewise_current)";
         })
         ++ (im {
           "<C-s>" = "<cmd>w<CR>";
           "<F1>" = "<cmd>:Stdheader<CR>";
           "<C-:>" = "<Plug>(comment_toggle_linewise_current)";
+          "<C-/>" = "<Plug>(comment_toggle_linewise_current)";
         })
         ++ [
           {
@@ -388,70 +386,14 @@
         };
       };
     };
-
-    /*
-    extraFiles."queries/rust/injections.scm" = ''
-    ;; extends
-
-    (
-      (macro_invocation
-        macro: ((scoped_identifier) @_sql_def)
-        (token_tree (string_literal) @sql))
-
-      (#eq? @_sql_def "sqlx::query")
-    )
-    '';
-    */
-
     plugins.treesitter = {
       enable = true;
-      indent = true;
+      settings = {
+        indent.enable = true;
+        auto_install = true;
+      };
 
       nixvimInjections = true;
-
-      grammarPackages = with config.plugins.treesitter.package.passthru.builtGrammars; [
-        arduino
-        bash
-        c
-        cpp
-        cuda
-        dart
-        devicetree
-        diff
-        dockerfile
-        doxygen
-        git_rebase
-        gitattributes
-        gitcommit
-        gitignore
-        groovy
-        html
-        ini
-        javascript
-        jsdoc
-        json
-        lalrpop
-        latex
-        lua
-        make
-        markdown
-        markdown_inline
-        meson
-        ninja
-        nix
-        python
-        regex
-        rst
-        rust
-        slint
-        sql
-        tlaplus
-        toml
-        typescript
-        vim
-        vimdoc
-        yaml
-      ];
     };
 
     plugins.treesitter-refactor = {
@@ -494,7 +436,7 @@
         };
         pre_hook = "require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()";
       };
-      #settings.toggler.line = "<C-:>";
+      settings.toggler.line = "<C-:>";
     };
 
     plugins.neo-tree = {
@@ -601,18 +543,18 @@
 
     plugins.rustaceanvim = {
       enable = true;
-      # settings.server.settings = {
-      #   cmd = [
-      #     "${pkgs.rust-analyzer}/bin/rust-analyzer"
-      #   ];
-      #   rust-analyzer = {
-      #     check.command = "clippy";
-      #     cargo.features = "all";
-      #     rustc.source = "discover";
-      #     checkOnSave = true;
-      #     inlayHints.lifetimeElisionHints.enable = "always";
-      #   };
-      # };
+      settings.server.default_settings.rust-analyzer = {
+        cmd = [
+          "${pkgs.rust-analyzer}/bin/rust-analyzer"
+        ];
+        rust-analyzer = {
+          check.command = "clippy";
+          cargo.features = "all";
+          rustc.source = "discover";
+          checkOnSave = true;
+          inlayHints.lifetimeElisionHints.enable = "always";
+        };
+      };
     };
 
     plugins.lspkind = {
@@ -627,9 +569,9 @@
       settings.autocmd.enabled = true;
     };
 
-    plugins.lsp_signature = {
-      #enable = true;
-    };
+    # plugins.lsp_signature = {
+    #   enable = true;
+    # };
 
     plugins.inc-rename = {
       enable = true;
@@ -641,7 +583,7 @@
       inlayHints = {
         rightAlign = true;
         rightAlignPadding = 4;
-        inline = "true";
+        inline = "false";
       };
 
       ast = {
