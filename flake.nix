@@ -257,11 +257,6 @@
                   ) (inputsMatching "new-plugin")
                 );
             })
-            (final: prev: {
-              djlint = prev.djlint.overrideAttrs {
-                patches = [./patches/djlint-regex-version.patch];
-              };
-            })
           ];
         };
 

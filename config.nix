@@ -483,7 +483,7 @@
           enable = true;
         };
         #typst-lsp.enable = true;
-        tsserver.enable = true;
+        #tsserver.enable = true;
         efm.extraOptions = {
           init_options = {
             documentFormatting = true;
