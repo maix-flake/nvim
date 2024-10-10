@@ -297,6 +297,7 @@
     };
 
     extraConfigLuaPre = ''
+      vim.lsp.inlay_hint.enable(true)
       local has_words_before = function()
         unpack = unpack or table.unpack
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -471,7 +472,7 @@
       };
 
       servers = {
-        nil-ls = {
+        nil_ls = {
           enable = true;
           settings = {
             formatting.command = ["${pkgs.alejandra}/bin/alejandra" "--quiet"];
@@ -540,7 +541,9 @@
     };
 
     #plugins.typst-vim.enable = true;
-
+    plugins.hex.enable = true;
+    plugins.comment-box.enable = true;
+    plugins.web-devicons.enable = true;
     plugins.rustaceanvim = {
       enable = true;
       settings.server.default_settings.rust-analyzer = {
