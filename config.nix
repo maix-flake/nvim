@@ -391,8 +391,49 @@
       enable = true;
       settings = {
         indent.enable = true;
-        auto_install = true;
+        highlight.enable = true;
       };
+      grammarPackages = with config.plugins.treesitter.package.passthru.builtGrammars; [
+        arduino
+        bash
+        c
+        cpp
+        cuda
+        dart
+        devicetree
+        diff
+        dockerfile
+        gitattributes
+        gitcommit
+        gitignore
+        git_rebase
+        groovy
+        html
+        ini
+        json
+        lalrpop
+        latex
+        lua
+        make
+        markdown
+        markdown_inline
+        meson
+        ninja
+        nix
+        python
+        regex
+        rst
+        rust
+        slint
+        sql
+        tlaplus
+        toml
+        vim
+        vimdoc
+        yaml
+        mermaid
+        fish
+      ];
 
       nixvimInjections = true;
     };
