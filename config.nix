@@ -700,12 +700,6 @@
       neoTreeIntegration = true;
     };
 
-    plugins.openscad = {
-      enable = true;
-      loadSnippets = true;
-      keymaps.enable = true;
-    };
-
     extraConfigLuaPost = ''
       require("luasnip.loaders.from_snipmate").lazy_load()
 
