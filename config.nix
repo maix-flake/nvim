@@ -272,25 +272,8 @@
         };
       };
     };
-    # plugins.null-ls = {
-    #   enable = true;
-    #   sources = {
-    #     diagnostics = {
-    #       gitlint.enable = true;
-    #     };
-    #     code_actions = {
-    #       shellcheck.enable = true;
-    #       #gitsigns.enable = true;
-    #     };
-    #     formatting = {
-    #       alejandra.enable = true;
-    #     };
-    #   };
-    # };
     plugins.gitsigns.enable = true;
     plugins.gitmessenger.enable = true;
-
-    # plugins.firenvim.enable = false;
 
     plugins.luasnip = {
       enable = true;
@@ -558,7 +541,15 @@
             ];
           };
         };
+        ruff.enable = true;
+        djlsp = {
+          enable = true;
+          package = null;
+        };
+        jedi_language_server.enable = true;
         taplo.enable = true;
+        pyright.enable = true;
+        sqls.enable = true;
         lemminx.enable = true;
         ltex = {
           enable = true;
@@ -662,6 +653,10 @@
     #
     #   sources.null-ls.ignore = true;
     # };
+
+    plugins.none-ls = {
+      enable = true;
+    };
 
     plugins.lualine = {
       enable = true;
