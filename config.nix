@@ -461,9 +461,9 @@
     };
 
     plugins.vim-matchup = {
-      treesitterIntegration = {
+      treesitter = {
         enable = true;
-        includeMatchWords = true;
+        include_match_words = true;
       };
       enable = true;
     };
@@ -478,7 +478,7 @@
         };
         pre_hook = "require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()";
       };
-      settings.toggler.line = "<C-:>";
+      settings.toggler.line = "<C-/>";
     };
 
     plugins.neo-tree = {
@@ -628,29 +628,31 @@
     plugins.clangd-extensions = {
       enable = true;
       enableOffsetEncodingWorkaround = true;
-      inlayHints = {
-        rightAlign = true;
-        rightAlignPadding = 4;
-        inline = "false";
-      };
 
-      ast = {
-        roleIcons = {
-          type = "";
-          declaration = "";
-          expression = "";
-          specifier = "";
-          statement = "";
-          templateArgument = "";
+      settings = {
+        inlay_hints = {
+          right_align = true;
+          right_align_padding = 4;
+          inline = false;
         };
-        kindIcons = {
-          compound = "";
-          recovery = "";
-          translationUnit = "";
-          packExpansion = "";
-          templateTypeParm = "";
-          templateTemplateParm = "";
-          templateParamObject = "";
+        ast = {
+          role_icons = {
+            type = "";
+            declaration = "";
+            expression = "";
+            specifier = "";
+            statement = "";
+            templateArgument = "";
+          };
+          kind_icons = {
+            compound = "";
+            recovery = "";
+            translationUnit = "";
+            packExpansion = "";
+            templateTypeParm = "";
+            templateTemplateParm = "";
+            templateParamObject = "";
+          };
         };
       };
     };
