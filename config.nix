@@ -549,7 +549,6 @@
         jedi_language_server.enable = true;
         taplo.enable = true;
         pyright.enable = true;
-        sqls.enable = true;
         lemminx.enable = true;
         ltex = {
           enable = true;
@@ -656,6 +655,7 @@
 
     plugins.none-ls = {
       enable = true;
+      sources.formatting.sql_formatter.enable = true;
     };
 
     plugins.lualine = {
