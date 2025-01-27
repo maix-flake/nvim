@@ -655,7 +655,10 @@
 
     plugins.none-ls = {
       enable = true;
-      sources.formatting.sql_formatter.enable = true;
+      sources.formatting.sql_formatter = {
+        enable = true;
+        package = pkgs.sql-formatter;
+      };
     };
 
     plugins.lualine = {
