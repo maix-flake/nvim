@@ -163,6 +163,8 @@
             "<C-s>" = "<cmd>w<CR>";
             "<F1>" = "<cmd>:Stdheader<CR>";
 
+            "<leader>w" = "<cmd>Telescope grep_string<CR>";
+            "<leader>q" = "<cmd>Telescope live_grep<CR>";
             "mk" = "<cmd>Telescope keymaps<CR>";
             "fg" = "<cmd>Telescope git_files<CR>";
             "gr" = "<cmd>Telescope lsp_references<CR>";
