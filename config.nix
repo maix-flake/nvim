@@ -496,6 +496,7 @@
       };
 
       servers = {
+        phpactor.enable = true;
         bufls = {
           enable = false;
           package = pkgs.buf;
@@ -508,9 +509,7 @@
         };
         bashls.enable = true;
         dartls.enable = true;
-        clangd = {
-          enable = true;
-        };
+        clangd.enable = true;
         efm.extraOptions = {
           init_options = {
             documentFormatting = true;
