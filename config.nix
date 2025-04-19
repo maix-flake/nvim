@@ -230,6 +230,10 @@
         ]);
 
       setup = {
+        php = {
+          formatter = "php_cs_fixer";
+          linter = "php";
+        };
         sh = {
           #linter = "shellcheck";
           formatter = "shfmt";
