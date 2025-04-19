@@ -231,7 +231,7 @@
 
       setup = {
         php = {
-          formatter = "php_cs_fixer";
+          formatter = "djlint";
           linter = "php";
         };
         sh = {
