@@ -165,14 +165,15 @@
 
             "<leader>w" = "<cmd>Telescope grep_string<CR>";
             "<leader>q" = "<cmd>Telescope live_grep<CR>";
+            "<leader>d" = "<cmd>Telescope diagnostics bufnr=0<CR>";
+            "<leader>D" = "<cmd>Telescope diagnostics<CR>";
+
             "mk" = "<cmd>Telescope keymaps<CR>";
             "fg" = "<cmd>Telescope git_files<CR>";
             "gr" = "<cmd>Telescope lsp_references<CR>";
             "gI" = "<cmd>Telescope lsp_implementations<CR>";
             "gW" = "<cmd>Telescope lsp_workspace_symbols<CR>";
             "gF" = "<cmd>Telescope lsp_document_symbols<CR>";
-            "ge" = "<cmd>Telescope diagnostics bufnr=0<CR>";
-            "gE" = "<cmd>Telescope diagnostics<CR>";
 
             "<leader>h" = {
               action = "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<CR>";
@@ -502,6 +503,7 @@
       };
 
       servers = {
+        asm_lsp.enable = true;
         phpactor.enable = true;
         bufls = {
           enable = false;
@@ -658,9 +660,12 @@
 
     plugins.none-ls = {
       enable = true;
-      sources.formatting.sql_formatter = {
-        enable = true;
-        package = pkgs.sql-formatter;
+      sources.formatting = {
+        asmfmt.enable = true;
+        sql_formatter = {
+          enable = true;
+          package = pkgs.sql-formatter;
+        };
       };
     };
 
