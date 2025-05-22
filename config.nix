@@ -288,6 +288,14 @@
 
     extraConfigLuaPre = ''
       vim.lsp.inlay_hint.enable(true)
+      -- local helpers = require("null-ls.helpers")
+      -- helpers.formatter_factory({
+      --  command = "nasmfmt",
+      --  from_temp_file = true,
+      --  to_temp_file = true
+      -- })
+
+
       local has_words_before = function()
         unpack = unpack or table.unpack
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -503,7 +511,6 @@
       };
 
       servers = {
-        asm_lsp.enable = true;
         phpactor.enable = true;
         bufls = {
           enable = false;
@@ -661,7 +668,6 @@
     plugins.none-ls = {
       enable = true;
       sources.formatting = {
-        asmfmt.enable = true;
         sql_formatter = {
           enable = true;
           package = pkgs.sql-formatter;
