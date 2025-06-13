@@ -37,17 +37,13 @@
         callback = helpers.mkRaw ''
           function(auEvent)
             local bufferCurrentLinesCount = vim.api.nvim_buf_line_count(0)
-
             if bufferCurrentLinesCount > 2048 then
               vim.notify("bigfile: disabling features", vim.log.levels.WARN)
-
               vim.cmd("TSBufDisable refactor.highlight_definitions")
-          vim.g.matchup_matchparen_enabled = 0
-          require("nvim-treesitter.configs").setup({
-           matchup = {
-             enable = false
-           }
-          })
+              vim.g.matchup_matchparen_enabled = 0
+              require("nvim-treesitter.configs").setup({
+               matchup = { enable = false } }
+              )
             end
           end
         '';
@@ -460,10 +456,10 @@
 
     plugins.vim-matchup = {
       treesitter = {
-        enable = true;
-        include_match_words = true;
+        enable = false;
+        include_match_words = false;
       };
-      enable = true;
+      enable = false;
     };
     plugins.headerguard.enable = true;
 
@@ -511,6 +507,8 @@
       };
 
       servers = {
+        ts_ls.enable = true;
+        eslint.enable = true;
         phpactor.enable = true;
         bufls = {
           enable = false;
@@ -715,6 +713,11 @@
     };
 
     extraConfigLuaPost = ''
+
+      require("nvim-treesitter.configs").setup({
+       matchup = { enable = false } }
+      )
+      vim.g.matchup_matchparen_enabled = 0
       require("luasnip.loaders.from_snipmate").lazy_load()
 
       vim.api.nvim_create_user_command("LtexLangChangeLanguage", function(data)
