@@ -243,48 +243,24 @@
           formatter = "djlint";
           linter = "php";
         };
-        sh = {
-          #linter = "shellcheck";
-          formatter = "shfmt";
-        };
-        bash = {
-          #linter = "shellcheck";
-          formatter = "shfmt";
-        };
-        c = {
-          linter = "cppcheck";
-        };
-        markdown = {
-          formatter = ["cbfmt" "mdformat"];
-        };
-        python = {
-          formatter = "black";
-        };
-        nix = {
-          linter = "statix";
-        };
-        lua = {
-          formatter = "stylua";
-        };
-        html = {
-          formatter = ["prettier" (helpers.mkRaw "djlint_fmt")];
-        };
         htmldjango = {
           formatter = [(helpers.mkRaw "djlint_fmt")];
           linter = "djlint";
         };
-        json = {
-          formatter = "prettier";
-        };
-        css = {
-          formatter = "prettier";
-        };
-        ts = {
-          formatter = "prettier";
-        };
-        gitcommit = {
-          linter = "gitlint";
-        };
+
+        bash = {formatter = "shfmt";};
+        c = {linter = "cppcheck";};
+        css = {formatter = "prettier";};
+        gitcommit = {linter = "gitlint";};
+        html = {formatter = ["prettier" (helpers.mkRaw "djlint_fmt")];};
+        javacript = {formatter = "prettier";};
+        json = {formatter = "prettier";};
+        lua = {formatter = "stylua";};
+        markdown = {formatter = ["cbfmt" "mdformat"];};
+        nix = {linter = "statix";};
+        python = {formatter = "black";};
+        sh = {formatter = "shfmt";};
+        typescript = {formatter = "prettier";};
       };
     };
     plugins.gitsigns.enable = true;
@@ -313,8 +289,8 @@
 
       local efm_fs = require('efmls-configs.fs')
       local djlint_fmt = {
-        formatCommand = string.format('%s --reformat ''${INPUT} -', efm_fs.executable('djlint')),
-        formatStdin = true,
+       formatCommand = string.format('%s --reformat ''${INPUT} -', efm_fs.executable('djlint')),
+       formatStdin = true,
       }
     '';
     # plugins.cmp.settings.snippet.expand= "luasnip";
@@ -555,6 +531,7 @@
         dartls.enable = true;
         clangd.enable = true;
         efm.extraOptions = {
+          enable = true;
           init_options = {
             documentFormatting = true;
           };
