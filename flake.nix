@@ -6,7 +6,6 @@
     flake-utils.url = "github:numtide/flake-utils";
     nixvim = {
       url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     # Plugins in nixpkgs
     "plugin:clangd_extensions-nvim" = {
@@ -113,10 +112,10 @@
       url = "github:nvim-lua/plenary.nvim";
       flake = false;
     };
-    "plugin:rustaceanvim" = {
-      url = "github:mrcjkb/rustaceanvim";
-      flake = false;
-    };
+    #"plugin:rustaceanvim" = {
+    # url = "github:mrcjkb/rustaceanvim";
+    #  flake = false;
+    #};
     "plugin:telescope-nvim" = {
       url = "github:nvim-telescope/telescope.nvim";
       flake = false;

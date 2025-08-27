@@ -564,7 +564,7 @@
           enable = true;
           package = null;
         };
-        jedi_language_server.enable = true;
+        #jedi_language_server.enable = true;
         taplo.enable = true;
         pyright.enable = true;
         lemminx.enable = true;
@@ -598,7 +598,7 @@
     plugins.comment-box.enable = true;
     plugins.web-devicons.enable = true;
     plugins.rustaceanvim = {
-      enable = true;
+      enable = false;
       settings.server.default_settings.rust-analyzer = {
         cmd = [
           "${pkgs.rust-analyzer}/bin/rust-analyzer"
