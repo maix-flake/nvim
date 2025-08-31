@@ -116,10 +116,6 @@
       };
     };
 
-    commands = {
-      "SpellFr" = "setlocal spelllang=fr";
-    };
-
     filetype = {
       filename = {
         Jenkinsfile = "groovy";
@@ -159,6 +155,9 @@
           "<S-A-Right>" = "<C-w>>";
           "<S-A-Up>" = "<C-w>+";
           "<S-A-Down>" = "<C-w>-";
+          "<C-:>" = "<Plug>(comment_toggle_linewise_current)";
+          "<C-/>" = "<Plug>(comment_toggle_linewise_current)";
+          "<C-s>" = "<cmd>w<CR>";
         })
         ++ (
           nm {
@@ -168,7 +167,6 @@
             "fc" = "<cmd>Neotree close<CR>";
             "bp" = "<cmd>Telescope buffers<CR>";
 
-            "<C-s>" = "<cmd>w<CR>";
             "<F1>" = "<cmd>:Stdheader<CR>";
 
             "<leader>w" = "<cmd>Telescope grep_string<CR>";
@@ -193,21 +191,14 @@
               action = "<Cmd>Telescope yank_history<CR>";
               options.desc = "history";
             };
-            "<C-:>" = "<Plug>(comment_toggle_linewise_current)";
-            "<C-/>" = "<Plug>(comment_toggle_linewise_current)";
           }
         )
         ++ (vs {
           "x" = "dl<CR>";
           "<F1>" = "<cmd>:Stdheader<CR>";
-          "<C-:>" = "<Plug>(comment_toggle_linewise_visual)";
-          "<C-/>" = "<Plug>(comment_toggle_linewise_current)";
         })
         ++ (im {
-          "<C-s>" = "<cmd>w<CR>";
           "<F1>" = "<cmd>:Stdheader<CR>";
-          "<C-:>" = "<Plug>(comment_toggle_linewise_current)";
-          "<C-/>" = "<Plug>(comment_toggle_linewise_current)";
         })
         ++ [
           {
@@ -224,52 +215,533 @@
       );
 
     clipboard.providers.wl-copy.enable = true;
+    plugins = {
+      efmls-configs = {
+        enable = true;
 
-    plugins.efmls-configs = {
-      enable = true;
+        toolPackages.mdformat = pkgs.mdformat.withPlugins (ps:
+          with ps; [
+            # TODO: broken with update of mdformat
+            # mdformat-gfm
+            mdformat-frontmatter
+            mdformat-footnote
+            mdformat-tables
+            mdit-py-plugins
+          ]);
 
-      toolPackages.mdformat = pkgs.mdformat.withPlugins (ps:
-        with ps; [
-          # TODO: broken with update of mdformat
-          # mdformat-gfm
-          mdformat-frontmatter
-          mdformat-footnote
-          mdformat-tables
-          mdit-py-plugins
-        ]);
+        setup = {
+          php = {
+            formatter = "djlint";
+            linter = "php";
+          };
+          htmldjango = {
+            formatter = [(helpers.mkRaw "djlint_fmt")];
+            linter = "djlint";
+          };
 
-      setup = {
-        php = {
-          formatter = "djlint";
-          linter = "php";
+          bash = {formatter = "shfmt";};
+          c = {linter = "cppcheck";};
+          css = {formatter = "prettier";};
+          gitcommit = {linter = "gitlint";};
+          html = {formatter = ["prettier" (helpers.mkRaw "djlint_fmt")];};
+          javacript = {formatter = "prettier";};
+          json = {formatter = "prettier";};
+          lua = {formatter = "stylua";};
+          markdown = {formatter = ["cbfmt" "mdformat"];};
+          nix = {linter = "statix";};
+          python = {formatter = "black";};
+          sh = {formatter = "shfmt";};
+          typescript = {formatter = "prettier";};
         };
-        htmldjango = {
-          formatter = [(helpers.mkRaw "djlint_fmt")];
-          linter = "djlint";
+      };
+      gitsigns.enable = true;
+      gitmessenger.enable = true;
+
+      luasnip = {
+        enable = true;
+      };
+
+      # cmp.settings.snippet.expand= "luasnip";
+
+      cmp = {
+        enable = true;
+
+        settings = {
+          snippet.expand = ''
+            function(args)
+              require('luasnip').lsp_expand(args.body)
+            end
+          '';
+          mapping = {
+            "<CR>" = "cmp.mapping.confirm({select = true })";
+            "<C-d>" = "cmp.mapping.scroll_docs(-4)";
+            "<C-f>" = "cmp.mapping.scroll_docs(4)";
+            "<C-Space>" = "cmp.mapping.complete()";
+            "<Tab>" = ''
+              cmp.mapping(function(fallback)
+                if cmp.visible() then
+                  cmp.select_next_item()
+                -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+                -- they way you will only jump inside the snippet region
+                elseif luasnip.expand_or_locally_jumpable() then
+                  luasnip.expand_or_jump()
+                elseif has_words_before() then
+                  cmp.complete()
+                else
+                  fallback()
+                end
+              end, { "i", "s" })
+            '';
+            "<S-Tab>" = ''
+              cmp.mapping(function(fallback)
+                if cmp.visible() then
+                  cmp.select_prev_item()
+                elseif luasnip.jumpable(-1) then
+                  luasnip.jump(-1)
+                else
+                  fallback()
+                end
+              end, { "i", "s" })
+            '';
+            "<Down>" = "cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), {'i'})";
+            "<Up>" = "cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), {'i'})";
+          };
+
+          sources = [
+            {name = "luasnip";}
+            {name = "nvim_lsp";}
+            {name = "path";}
+            {name = "buffer";}
+            {name = "calc";}
+          ];
         };
 
-        bash = {formatter = "shfmt";};
-        c = {linter = "cppcheck";};
-        css = {formatter = "prettier";};
-        gitcommit = {linter = "gitlint";};
-        html = {formatter = ["prettier" (helpers.mkRaw "djlint_fmt")];};
-        javacript = {formatter = "prettier";};
-        json = {formatter = "prettier";};
-        lua = {formatter = "stylua";};
-        markdown = {formatter = ["cbfmt" "mdformat"];};
-        nix = {linter = "statix";};
-        python = {formatter = "black";};
-        sh = {formatter = "shfmt";};
-        typescript = {formatter = "prettier";};
+        filetype.sh = {
+          sources = [
+            {name = "zsh";}
+          ];
+        };
+      };
+
+      telescope = {
+        enable = true;
+        enabledExtensions = ["ui-select"];
+        settings = {
+          defaults = {
+            layout_strategy = "vertical";
+            ui-select = helpers.mkRaw ''
+              require("telescope.themes").get_dropdown {
+                -- even more opts
+              }
+            '';
+          };
+        };
+      };
+      treesitter = {
+        enable = true;
+        settings = {
+          indent.enable = true;
+          highlight.enable = true;
+        };
+        grammarPackages = with config.plugins.treesitter.package.passthru.builtGrammars; [
+          arduino
+          bash
+          c
+          cpp
+          cuda
+          dart
+          devicetree
+          diff
+          dockerfile
+          gitattributes
+          gitcommit
+          gitignore
+          git_rebase
+          groovy
+          html
+          ini
+          json
+          lalrpop
+          latex
+          lua
+          make
+          markdown
+          markdown_inline
+          meson
+          ninja
+          nix
+          python
+          regex
+          rst
+          rust
+          slint
+          sql
+          tlaplus
+          toml
+          vim
+          vimdoc
+          yaml
+          mermaid
+          fish
+          tree-sitter-dbml
+        ];
+
+        luaConfig.post = ''
+          do
+            local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+            -- change the following as needed
+            parser_config.nu = {
+              install_info = {
+                url = "${tree-sitter-dbml}", -- local path or git repo
+                files = {"src/parser.c"}, -- note that some parsers also require src/scanner.c or src/scanner.cc
+                requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
+                -- optional entries:
+                --  branch = "main", -- default branch in case of git repo if different from master
+                -- generate_requires_npm = false, -- if stand-alone parser without npm dependencies
+              },
+              filetype = "dbml", -- if filetype does not match the parser name
+            }
+          end
+        '';
+
+        nixvimInjections = true;
+      };
+
+      treesitter-refactor = {
+        enable = true;
+        highlightDefinitions = {
+          enable = true;
+          clearOnCursorMove = true;
+        };
+        smartRename = {
+          enable = true;
+        };
+        navigation = {
+          enable = true;
+        };
+      };
+
+      treesitter-context = {
+        enable = true;
+      };
+
+      ts-context-commentstring = {
+        enable = true;
+      };
+
+      vim-matchup = {
+        treesitter = {
+          enable = false;
+          include_match_words = false;
+        };
+        enable = false;
+      };
+      headerguard.enable = true;
+
+      comment = {
+        enable = true;
+        settings = {
+          mappings = {
+            extra = false;
+            basic = false;
+          };
+          pre_hook = "require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()";
+        };
+        settings.toggler.line = "<C-/>";
+      };
+
+      neo-tree = {
+        enable = true;
+      };
+
+      plantuml-syntax.enable = true;
+
+      indent-blankline = {
+        enable = true;
+
+        settings.scope = {
+          enabled = true;
+          show_start = true;
+        };
+      };
+
+      lsp = {
+        enable = true;
+        inlayHints = true;
+        enabledServers = [];
+
+        keymaps = {
+          silent = true;
+          lspBuf = {
+            "gd" = "definition";
+            "gD" = "declaration";
+            "<leader>a" = "code_action";
+            "ff" = "format";
+            "K" = "hover";
+          };
+        };
+
+        servers = {
+          bashls.enable = true;
+          clangd.enable = true;
+          dartls.enable = true;
+          eslint.enable = true;
+          html.enable = true;
+          jedi_language_server.enable = true;
+          lemminx.enable = true;
+          nginx_language_server.enable = true;
+          phpactor.enable = true;
+          pyright.enable = true;
+          ruff.enable = true;
+          taplo.enable = true;
+          ts_ls.enable = true;
+
+          djlsp = {
+            enable = true;
+            package = pkgs.djlint;
+          };
+          nil_ls = {
+            enable = true;
+            settings = {
+              formatting.command = ["${pkgs.alejandra}/bin/alejandra" "--quiet"];
+            };
+          };
+          efm.extraOptions = {
+            enable = true;
+            init_options = {
+              documentFormatting = true;
+            };
+            settings = {
+              logLevel = 1;
+              languages.meson = [
+                (helpers.mkRaw (helpers.toLuaObject {
+                  prefix = "muon-fmt";
+                  formatCommand = "muon fmt -";
+                  formatStdin = true;
+                }))
+                (helpers.mkRaw (helpers.toLuaObject {
+                  prefix = "muon-analyze";
+                  lintSource = "efm/muon-analyze";
+                  lintCommand = "muon analyze -l";
+                  lintWorkspace = true;
+                  lintStdin = false;
+                  LintIgnoreExitCode = true;
+                  rootMarkers = ["meson_options.txt" ".git"];
+                  lintFormats = [
+                    "%f:%l:%c: %trror %m"
+                    "%f:%l:%c: %tarning %m"
+                  ];
+                }))
+              ];
+            };
+          };
+          ltex = {
+            enable = true;
+            onAttach.function = ''
+              require("ltex_extra").setup{
+                load_langs = { "en-US", "fr-FR" },
+                path = ".ltex",
+              }
+            '';
+            filetypes = [
+              "bib"
+              "gitcommit"
+              "markdown"
+              "org"
+              "plaintex"
+              "rst"
+              "rnoweb"
+              "tex"
+              "pandoc"
+              "typst"
+            ];
+          };
+        };
+      };
+
+      hex.enable = true;
+      comment-box.enable = true;
+      web-devicons.enable = true;
+      rustaceanvim = {
+        enable = true;
+        settings.server.default_settings.rust-analyzer = {
+          cmd = [
+            "${pkgs.rust-analyzer}/bin/rust-analyzer"
+          ];
+          rust-analyzer = {
+            check.command = "clippy";
+            cargo.features = "all";
+            rustc.source = "discover";
+            checkOnSave = true;
+            inlayHints.lifetimeElisionHints.enable = "always";
+          };
+        };
+      };
+
+      lspkind = {
+        enable = true;
+        cmp = {
+          enable = true;
+        };
+      };
+
+      nvim-lightbulb = {
+        enable = true;
+        settings.autocmd.enabled = true;
+      };
+
+      # lsp_signature = {
+      #   enable = true;
+      # };
+
+      inc-rename = {
+        enable = true;
+      };
+
+      clangd-extensions = {
+        enable = true;
+        enableOffsetEncodingWorkaround = true;
+
+        settings = {
+          inlay_hints = {
+            right_align = true;
+            right_align_padding = 4;
+            inline = false;
+          };
+          ast = {
+            role_icons = {
+              type = "";
+              declaration = "";
+              expression = "";
+              specifier = "";
+              statement = "";
+              templateArgument = "";
+            };
+            kind_icons = {
+              compound = "";
+              recovery = "";
+              translationUnit = "";
+              packExpansion = "";
+              templateTypeParm = "";
+              templateTemplateParm = "";
+              templateParamObject = "";
+            };
+          };
+        };
+      };
+
+      # fidget = {
+      #   enable = true;
+      #
+      #   sources.null-ls.ignore = true;
+      # };
+
+      none-ls = {
+        enable = true;
+        sources.formatting = {
+          sql_formatter = {
+            enable = true;
+            package = pkgs.sql-formatter;
+          };
+        };
+      };
+
+      lualine = {
+        enable = true;
+      };
+
+      trouble = {
+        enable = true;
+      };
+
+      noice = {
+        enable = true;
+
+        settings = {
+          messages = {
+            view = "mini";
+            viewError = "mini";
+            viewWarn = "mini";
+          };
+
+          lsp.override = {
+            "vim.lsp.util.convert_input_to_markdown_lines" = true;
+            "vim.lsp.util.stylize_markdown" = true;
+            "cmp.entry.get_documentation" = true;
+          };
+          presets = {
+            bottom_search = true;
+            command_palette = true;
+            long_message_to_split = true;
+            inc_rename = true;
+            lsp_doc_border = false;
+          };
+        };
+      };
+
+      netman = {
+        enable = false;
+        package = pkgs.vimPlugins.netman-nvim;
+        neoTreeIntegration = true;
+      };
+      zk = {
+        enable = true;
+        settings.picker = "telescope";
+      };
+
+      which-key.enable = true;
+      # ft-std-header.enable = true;
+
+      leap.enable = true;
+
+      yanky = {
+        enable = true;
+        enableTelescope = true;
+        settings.picker.telescope.use_default_mappings = true;
       };
     };
-    plugins.gitsigns.enable = true;
-    plugins.gitmessenger.enable = true;
 
-    plugins.luasnip = {
-      enable = true;
+    files = {
+      "ftplugin/nix.lua" = {
+        opts = {
+          tabstop = 2;
+          shiftwidth = 2;
+          expandtab = true;
+        };
+      };
+
+      "ftplugin/markdown.lua" = {
+        # extraConfigLua = ''
+        #   if require("zk.util").notebook_root(vim.fn.expand('%:p')) ~= nil then
+        #     local function map(...) vim.api.nvim_buf_set_keymap(0, ...) end
+        #     local opts = { noremap=true, silent=false }
+        #
+        #     -- Open the link under the caret.
+        #     map("n", "<CR>", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+        #
+        #     -- Create a new note after asking for its title.
+        #     -- This overrides the global `<leader>zn` mapping to create the note in the same directory as the current buffer.
+        #     map("n", "<leader>zn", "<Cmd>ZkNew { dir = vim.fn.expand('%:p:h'), title = vim.fn.input('Title: ') }<CR>", opts)
+        #     -- Create a new note in the same directory as the current buffer, using the current selection for title.
+        #     map("v", "<leader>znt", ":'<,'>ZkNewFromTitleSelection { dir = vim.fn.expand('%:p:h') }<CR>", opts)
+        #     -- Create a new note in the same directory as the current buffer, using the current selection for note content and asking for its title.
+        #     map("v", "<leader>znc", ":'<,'>ZkNewFromContentSelection { dir = vim.fn.expand('%:p:h'), title = vim.fn.input('Title: ') }<CR>", opts)
+        #
+        #     -- Open notes linking to the current buffer.
+        #     map("n", "<leader>zb", "<Cmd>ZkBacklinks<CR>", opts)
+        #     -- Alternative for backlinks using pure LSP and showing the source context.
+        #     --map('n', '<leader>zb', '<Cmd>lua vim.lsp.buf.references()<CR>', opts)
+        #     -- Open notes linked by the current buffer.
+        #     map("n", "<leader>zl", "<Cmd>ZkLinks<CR>", opts)
+        #
+        #     -- Preview a linked note.
+        #     map("n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", opts)
+        #     -- Open the code actions for a visual selection.
+        #     map("v", "<leader>za", ":'<,'>lua vim.lsp.buf.range_code_action()<CR>", opts)
+        #   end
+        # '';
+      };
     };
-
     extraConfigLuaPre = ''
       vim.lsp.inlay_hint.enable(true)
       -- local helpers = require("null-ls.helpers")
@@ -293,432 +765,6 @@
        formatStdin = true,
       }
     '';
-    # plugins.cmp.settings.snippet.expand= "luasnip";
-
-    plugins.cmp = {
-      enable = true;
-
-      settings = {
-        snippet.expand = ''
-          function(args)
-            require('luasnip').lsp_expand(args.body)
-          end
-        '';
-        mapping = {
-          "<CR>" = "cmp.mapping.confirm({select = true })";
-          "<C-d>" = "cmp.mapping.scroll_docs(-4)";
-          "<C-f>" = "cmp.mapping.scroll_docs(4)";
-          "<C-Space>" = "cmp.mapping.complete()";
-          "<Tab>" = ''
-            cmp.mapping(function(fallback)
-              if cmp.visible() then
-                cmp.select_next_item()
-              -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-              -- they way you will only jump inside the snippet region
-              elseif luasnip.expand_or_locally_jumpable() then
-                luasnip.expand_or_jump()
-              elseif has_words_before() then
-                cmp.complete()
-              else
-                fallback()
-              end
-            end, { "i", "s" })
-          '';
-          "<S-Tab>" = ''
-            cmp.mapping(function(fallback)
-              if cmp.visible() then
-                cmp.select_prev_item()
-              elseif luasnip.jumpable(-1) then
-                luasnip.jump(-1)
-              else
-                fallback()
-              end
-            end, { "i", "s" })
-          '';
-          "<Down>" = "cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), {'i'})";
-          "<Up>" = "cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), {'i'})";
-        };
-
-        sources = [
-          {name = "luasnip";}
-          {name = "nvim_lsp";}
-          {name = "path";}
-          {name = "buffer";}
-          {name = "calc";}
-        ];
-      };
-
-      filetype.sh = {
-        sources = [
-          {name = "zsh";}
-        ];
-      };
-    };
-
-    plugins.telescope = {
-      enable = true;
-      enabledExtensions = ["ui-select"];
-      settings = {
-        defaults = {
-          layout_strategy = "vertical";
-          ui-select = helpers.mkRaw ''
-            require("telescope.themes").get_dropdown {
-              -- even more opts
-            }
-          '';
-        };
-      };
-    };
-    plugins.treesitter = {
-      enable = true;
-      settings = {
-        indent.enable = true;
-        highlight.enable = true;
-      };
-      grammarPackages = with config.plugins.treesitter.package.passthru.builtGrammars; [
-        arduino
-        bash
-        c
-        cpp
-        cuda
-        dart
-        devicetree
-        diff
-        dockerfile
-        gitattributes
-        gitcommit
-        gitignore
-        git_rebase
-        groovy
-        html
-        ini
-        json
-        lalrpop
-        latex
-        lua
-        make
-        markdown
-        markdown_inline
-        meson
-        ninja
-        nix
-        python
-        regex
-        rst
-        rust
-        slint
-        sql
-        tlaplus
-        toml
-        vim
-        vimdoc
-        yaml
-        mermaid
-        fish
-        tree-sitter-dbml
-      ];
-
-      luaConfig.post = ''
-        do
-          local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-          -- change the following as needed
-          parser_config.nu = {
-            install_info = {
-              url = "${tree-sitter-dbml}", -- local path or git repo
-              files = {"src/parser.c"}, -- note that some parsers also require src/scanner.c or src/scanner.cc
-              requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
-              -- optional entries:
-              --  branch = "main", -- default branch in case of git repo if different from master
-              -- generate_requires_npm = false, -- if stand-alone parser without npm dependencies
-            },
-            filetype = "dbml", -- if filetype does not match the parser name
-          }
-        end
-      '';
-
-      nixvimInjections = true;
-    };
-
-    plugins.treesitter-refactor = {
-      enable = true;
-      highlightDefinitions = {
-        enable = true;
-        clearOnCursorMove = true;
-      };
-      smartRename = {
-        enable = true;
-      };
-      navigation = {
-        enable = true;
-      };
-    };
-
-    plugins.treesitter-context = {
-      enable = true;
-    };
-
-    plugins.ts-context-commentstring = {
-      enable = true;
-    };
-
-    plugins.vim-matchup = {
-      treesitter = {
-        enable = false;
-        include_match_words = false;
-      };
-      enable = false;
-    };
-    plugins.headerguard.enable = true;
-
-    plugins.comment = {
-      enable = true;
-      settings = {
-        mappings = {
-          extra = false;
-          basic = false;
-        };
-        pre_hook = "require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()";
-      };
-      settings.toggler.line = "<C-/>";
-    };
-
-    plugins.neo-tree = {
-      enable = true;
-    };
-
-    plugins.plantuml-syntax.enable = true;
-
-    plugins.indent-blankline = {
-      enable = true;
-
-      settings.scope = {
-        enabled = true;
-        show_start = true;
-      };
-    };
-
-    plugins.lsp = {
-      enable = true;
-      inlayHints = true;
-      enabledServers = [];
-
-      keymaps = {
-        silent = true;
-        lspBuf = {
-          "gd" = "definition";
-          "gD" = "declaration";
-          "<leader>a" = "code_action";
-          "ff" = "format";
-          "K" = "hover";
-        };
-      };
-
-      servers = {
-        ts_ls.enable = true;
-        eslint.enable = true;
-        phpactor.enable = true;
-        bufls = {
-          enable = false;
-          package = pkgs.buf;
-        };
-        nil_ls = {
-          enable = true;
-          settings = {
-            formatting.command = ["${pkgs.alejandra}/bin/alejandra" "--quiet"];
-          };
-        };
-        bashls.enable = true;
-        dartls.enable = true;
-        clangd.enable = true;
-        efm.extraOptions = {
-          enable = true;
-          init_options = {
-            documentFormatting = true;
-          };
-          settings = {
-            logLevel = 1;
-            languages.meson = [
-              (helpers.mkRaw (helpers.toLuaObject {
-                prefix = "muon-fmt";
-                formatCommand = "muon fmt -";
-                formatStdin = true;
-              }))
-              (helpers.mkRaw (helpers.toLuaObject {
-                prefix = "muon-analyze";
-                lintSource = "efm/muon-analyze";
-                lintCommand = "muon analyze -l";
-                lintWorkspace = true;
-                lintStdin = false;
-                LintIgnoreExitCode = true;
-                rootMarkers = ["meson_options.txt" ".git"];
-                lintFormats = [
-                  "%f:%l:%c: %trror %m"
-                  "%f:%l:%c: %tarning %m"
-                ];
-              }))
-            ];
-          };
-        };
-        ruff.enable = true;
-        djlsp = {
-          enable = true;
-          package = null;
-        };
-        #jedi_language_server.enable = true;
-        taplo.enable = true;
-        pyright.enable = true;
-        lemminx.enable = true;
-        ltex = {
-          enable = true;
-          onAttach.function = ''
-            require("ltex_extra").setup{
-              load_langs = { "en-US", "fr-FR" },
-              path = ".ltex",
-            }
-          '';
-          filetypes = [
-            "bib"
-            "gitcommit"
-            "markdown"
-            "org"
-            "plaintex"
-            "rst"
-            "rnoweb"
-            "tex"
-            "pandoc"
-            "typst"
-            #"mail"
-          ];
-        };
-      };
-    };
-
-    #plugins.typst-vim.enable = true;
-    plugins.hex.enable = true;
-    plugins.comment-box.enable = true;
-    plugins.web-devicons.enable = true;
-    plugins.rustaceanvim = {
-      enable = false;
-      settings.server.default_settings.rust-analyzer = {
-        cmd = [
-          "${pkgs.rust-analyzer}/bin/rust-analyzer"
-        ];
-        rust-analyzer = {
-          check.command = "clippy";
-          cargo.features = "all";
-          rustc.source = "discover";
-          checkOnSave = true;
-          inlayHints.lifetimeElisionHints.enable = "always";
-        };
-      };
-    };
-
-    plugins.lspkind = {
-      enable = true;
-      cmp = {
-        enable = true;
-      };
-    };
-
-    plugins.nvim-lightbulb = {
-      enable = true;
-      settings.autocmd.enabled = true;
-    };
-
-    # plugins.lsp_signature = {
-    #   enable = true;
-    # };
-
-    plugins.inc-rename = {
-      enable = true;
-    };
-
-    plugins.clangd-extensions = {
-      enable = true;
-      enableOffsetEncodingWorkaround = true;
-
-      settings = {
-        inlay_hints = {
-          right_align = true;
-          right_align_padding = 4;
-          inline = false;
-        };
-        ast = {
-          role_icons = {
-            type = "";
-            declaration = "";
-            expression = "";
-            specifier = "";
-            statement = "";
-            templateArgument = "";
-          };
-          kind_icons = {
-            compound = "";
-            recovery = "";
-            translationUnit = "";
-            packExpansion = "";
-            templateTypeParm = "";
-            templateTemplateParm = "";
-            templateParamObject = "";
-          };
-        };
-      };
-    };
-
-    # fidget = {
-    #   enable = true;
-    #
-    #   sources.null-ls.ignore = true;
-    # };
-
-    plugins.none-ls = {
-      enable = true;
-      sources.formatting = {
-        sql_formatter = {
-          enable = true;
-          package = pkgs.sql-formatter;
-        };
-      };
-    };
-
-    plugins.lualine = {
-      enable = true;
-    };
-
-    plugins.trouble = {
-      enable = true;
-    };
-
-    plugins.noice = {
-      enable = true;
-
-      settings = {
-        messages = {
-          view = "mini";
-          viewError = "mini";
-          viewWarn = "mini";
-        };
-
-        lsp.override = {
-          "vim.lsp.util.convert_input_to_markdown_lines" = true;
-          "vim.lsp.util.stylize_markdown" = true;
-          "cmp.entry.get_documentation" = true;
-        };
-        presets = {
-          bottom_search = true;
-          command_palette = true;
-          long_message_to_split = true;
-          inc_rename = true;
-          lsp_doc_border = false;
-        };
-      };
-    };
-
-    plugins.netman = {
-      enable = false;
-      package = pkgs.vimPlugins.netman-nvim;
-      neoTreeIntegration = true;
-    };
 
     extraConfigLuaPost = ''
 
@@ -750,66 +796,7 @@
       })
     '';
 
-    plugins.zk = {
-      enable = true;
-      settings.picker = "telescope";
-    };
-
-    plugins.which-key.enable = true;
-    # plugins.ft-std-header.enable = true;
-
-    plugins.leap.enable = true;
-
-    plugins.yanky = {
-      enable = true;
-      enableTelescope = true;
-      settings.picker.telescope.use_default_mappings = true;
-    };
-
-    files."ftplugin/nix.lua" = {
-      opts = {
-        tabstop = 2;
-        shiftwidth = 2;
-        expandtab = true;
-      };
-    };
-
-    files."ftplugin/markdown.lua" = {
-      # extraConfigLua = ''
-      #   if require("zk.util").notebook_root(vim.fn.expand('%:p')) ~= nil then
-      #     local function map(...) vim.api.nvim_buf_set_keymap(0, ...) end
-      #     local opts = { noremap=true, silent=false }
-      #
-      #     -- Open the link under the caret.
-      #     map("n", "<CR>", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
-      #
-      #     -- Create a new note after asking for its title.
-      #     -- This overrides the global `<leader>zn` mapping to create the note in the same directory as the current buffer.
-      #     map("n", "<leader>zn", "<Cmd>ZkNew { dir = vim.fn.expand('%:p:h'), title = vim.fn.input('Title: ') }<CR>", opts)
-      #     -- Create a new note in the same directory as the current buffer, using the current selection for title.
-      #     map("v", "<leader>znt", ":'<,'>ZkNewFromTitleSelection { dir = vim.fn.expand('%:p:h') }<CR>", opts)
-      #     -- Create a new note in the same directory as the current buffer, using the current selection for note content and asking for its title.
-      #     map("v", "<leader>znc", ":'<,'>ZkNewFromContentSelection { dir = vim.fn.expand('%:p:h'), title = vim.fn.input('Title: ') }<CR>", opts)
-      #
-      #     -- Open notes linking to the current buffer.
-      #     map("n", "<leader>zb", "<Cmd>ZkBacklinks<CR>", opts)
-      #     -- Alternative for backlinks using pure LSP and showing the source context.
-      #     --map('n', '<leader>zb', '<Cmd>lua vim.lsp.buf.references()<CR>', opts)
-      #     -- Open notes linked by the current buffer.
-      #     map("n", "<leader>zl", "<Cmd>ZkLinks<CR>", opts)
-      #
-      #     -- Preview a linked note.
-      #     map("n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", opts)
-      #     -- Open the code actions for a visual selection.
-      #     map("v", "<leader>za", ":'<,'>lua vim.lsp.buf.range_code_action()<CR>", opts)
-      #   end
-      # '';
-    };
-
     extraPackages = with pkgs; [
-      /*
-      sca2d
-      */
       djlint
       muon
     ];
