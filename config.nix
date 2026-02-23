@@ -1,23 +1,10 @@
 {
   pkgs,
   config,
-  helpers,
   lib,
   ...
 }: {
-  config = let
-    tree-sitter-dbml = pkgs.tree-sitter.buildGrammar {
-      language = "dbml";
-      version = "0.0.0+rev=2e2fa56";
-      src = pkgs.fetchFromGitHub {
-        owner = "dynamotn";
-        repo = "tree-sitter-dbml";
-        rev = "2e2fa5640268c33c3d3f27f7e676f631a9c68fd9";
-        hash = "sha256-IxxUW6YYxP1hkwA9NEojEEE3c8pwvAI6juX8aF7NfMw=";
-      };
-      meta.homepage = "https://github.com/dynamotn/tree-sitter-dbml";
-    };
-  in {
+  config = {
     colorschemes.tokyonight = {
       settings.style = "night";
       enable = true;
@@ -25,41 +12,28 @@
 
     autoGroups.BigFileOptimizer = {};
     autoCmd = [
-      {
-        event = "BufReadPost";
-        pattern = [
-          "*.md"
-          "*.rs"
-          "*.lua"
-          "*.sh"
-          "*.bash"
-          "*.zsh"
-          "*.js"
-          "*.jsx"
-          "*.ts"
-          "*.tsx"
-          "*.c"
-          "*.h"
-          "*.cc"
-          "*.hh"
-          "*.cpp"
-          "*.cph"
-        ];
-        group = "BigFileOptimizer";
-        callback = helpers.mkRaw ''
-          function(auEvent)
-            local bufferCurrentLinesCount = vim.api.nvim_buf_line_count(0)
-            if bufferCurrentLinesCount > 2048 then
-              vim.notify("bigfile: disabling features", vim.log.levels.WARN)
-              vim.cmd("TSBufDisable refactor.highlight_definitions")
-              vim.g.matchup_matchparen_enabled = 0
-              require("nvim-treesitter.configs").setup({
-               matchup = { enable = false } }
-              )
-            end
-          end
-        '';
-      }
+      #{
+      #  event = "BufReadPost";
+      #  pattern = [
+      #    "*.md"
+      #    "*.rs"
+      #    "*.lua"
+      #    "*.sh"
+      #    "*.bash"
+      #    "*.zsh"
+      #    "*.js"
+      #    "*.jsx"
+      #    "*.ts"
+      #    "*.tsx"
+      #    "*.c"
+      #    "*.h"
+      #    "*.cc"
+      #    "*.hh"
+      #    "*.cpp"
+      #    "*.cph"
+      #  ];
+      #  group = "BigFileOptimizer";
+      #}
     ];
 
     globals = {
@@ -145,7 +119,7 @@
       vs = modeKeys ["v"];
       im = modeKeys ["i"];
     in
-      helpers.keymaps.mkKeymaps {options.silent = true;} (
+      lib.nixvim.keymaps.mkKeymaps {options.silent = true;} (
         (all_mode {
           "<A-Left>" = "<C-w><Left>";
           "<A-Right>" = "<C-w><Right>";
@@ -166,8 +140,6 @@
             "fR" = "<cmd>Neotree remote<CR>";
             "fc" = "<cmd>Neotree close<CR>";
             "bp" = "<cmd>Telescope buffers<CR>";
-
-            "<F1>" = "<cmd>:Stdheader<CR>";
 
             "<leader>w" = "<cmd>Telescope grep_string<CR>";
             "<leader>q" = "<cmd>Telescope live_grep<CR>";
@@ -195,16 +167,13 @@
         )
         ++ (vs {
           "x" = "dl<CR>";
-          "<F1>" = "<cmd>:Stdheader<CR>";
         })
-        ++ (im {
-          "<F1>" = "<cmd>:Stdheader<CR>";
-        })
+        ++ (im {})
         ++ [
           {
             key = "<leader>r";
             mode = ["n"];
-            action = helpers.mkRaw ''
+            action = lib.nixvim.mkRaw ''
               function()
               	return ":IncRename " .. vim.fn.expand("<cword>")
               end
@@ -219,23 +188,20 @@
       efmls-configs = {
         enable = true;
 
-        toolPackages.mdformat = pkgs.mdformat.withPlugins (ps:
-          with ps; [
-            # TODO: broken with update of mdformat
-            # mdformat-gfm
-            mdformat-frontmatter
-            mdformat-footnote
-            mdformat-tables
-            mdit-py-plugins
-          ]);
+        toolPackages.mdformat = pkgs.mdformat;
+        #.withPlugins (ps:
+        #  with ps; [
+        #    # TODO: broken with update of mdformat
+        #    # mdformat-gfm
+        #    mdformat-frontmatter
+        #    mdformat-footnote
+        #    mdformat-tables
+        #    mdit-py-plugins
+        #  ]);
 
-        setup = {
-          php = {
-            formatter = "djlint";
-            linter = "php";
-          };
+        languages = {
           htmldjango = {
-            formatter = [(helpers.mkRaw "djlint_fmt")];
+            formatter = [(lib.nixvim.mkRaw "djlint_fmt")];
             linter = "djlint";
           };
 
@@ -243,7 +209,7 @@
           c = {linter = "cppcheck";};
           css = {formatter = "prettier";};
           gitcommit = {linter = "gitlint";};
-          html = {formatter = ["prettier" (helpers.mkRaw "djlint_fmt")];};
+          html = {formatter = ["prettier" (lib.nixvim.mkRaw "djlint_fmt")];};
           javacript = {formatter = "prettier";};
           json = {formatter = "prettier";};
           lua = {formatter = "stylua";};
@@ -329,7 +295,7 @@
         settings = {
           defaults = {
             layout_strategy = "vertical";
-            ui-select = helpers.mkRaw ''
+            ui-select = lib.nixvim.mkRaw ''
               require("telescope.themes").get_dropdown {
                 -- even more opts
               }
@@ -383,41 +349,23 @@
           yaml
           mermaid
           fish
-          tree-sitter-dbml
         ];
-
-        luaConfig.post = ''
-          do
-            local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-            -- change the following as needed
-            parser_config.nu = {
-              install_info = {
-                url = "${tree-sitter-dbml}", -- local path or git repo
-                files = {"src/parser.c"}, -- note that some parsers also require src/scanner.c or src/scanner.cc
-                requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
-                -- optional entries:
-                --  branch = "main", -- default branch in case of git repo if different from master
-                -- generate_requires_npm = false, -- if stand-alone parser without npm dependencies
-              },
-              filetype = "dbml", -- if filetype does not match the parser name
-            }
-          end
-        '';
-
         nixvimInjections = true;
       };
 
       treesitter-refactor = {
-        enable = true;
-        highlightDefinitions = {
-          enable = true;
-          clearOnCursorMove = true;
-        };
-        smartRename = {
-          enable = true;
-        };
-        navigation = {
-          enable = true;
+        enable = false;
+        settings = {
+          highlightDefinitions = {
+            enable = true;
+            clearOnCursorMove = true;
+          };
+          smartRename = {
+            enable = true;
+          };
+          navigation = {
+            enable = true;
+          };
         };
       };
 
@@ -436,7 +384,7 @@
         };
         enable = false;
       };
-      headerguard.enable = true;
+      #headerguard.enable = true;
 
       comment = {
         enable = true;
@@ -468,7 +416,6 @@
       lsp = {
         enable = true;
         inlayHints = true;
-        enabledServers = [];
 
         keymaps = {
           silent = true;
@@ -513,48 +460,7 @@
             };
             settings = {
               logLevel = 1;
-              languages.meson = [
-                (helpers.mkRaw (helpers.toLuaObject {
-                  prefix = "muon-fmt";
-                  formatCommand = "muon fmt -";
-                  formatStdin = true;
-                }))
-                (helpers.mkRaw (helpers.toLuaObject {
-                  prefix = "muon-analyze";
-                  lintSource = "efm/muon-analyze";
-                  lintCommand = "muon analyze -l";
-                  lintWorkspace = true;
-                  lintStdin = false;
-                  LintIgnoreExitCode = true;
-                  rootMarkers = ["meson_options.txt" ".git"];
-                  lintFormats = [
-                    "%f:%l:%c: %trror %m"
-                    "%f:%l:%c: %tarning %m"
-                  ];
-                }))
-              ];
             };
-          };
-          ltex = {
-            enable = true;
-            onAttach.function = ''
-              require("ltex_extra").setup{
-                load_langs = { "en-US", "fr-FR" },
-                path = ".ltex",
-              }
-            '';
-            filetypes = [
-              "bib"
-              "gitcommit"
-              "markdown"
-              "org"
-              "plaintex"
-              "rst"
-              "rnoweb"
-              "tex"
-              "pandoc"
-              "typst"
-            ];
           };
         };
       };
@@ -589,10 +495,6 @@
         enable = true;
         settings.autocmd.enabled = true;
       };
-
-      # lsp_signature = {
-      #   enable = true;
-      # };
 
       inc-rename = {
         enable = true;
@@ -690,7 +592,6 @@
       };
 
       which-key.enable = true;
-      # ft-std-header.enable = true;
 
       leap.enable = true;
 
@@ -709,104 +610,17 @@
           expandtab = true;
         };
       };
-
-      "ftplugin/markdown.lua" = {
-        # extraConfigLua = ''
-        #   if require("zk.util").notebook_root(vim.fn.expand('%:p')) ~= nil then
-        #     local function map(...) vim.api.nvim_buf_set_keymap(0, ...) end
-        #     local opts = { noremap=true, silent=false }
-        #
-        #     -- Open the link under the caret.
-        #     map("n", "<CR>", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
-        #
-        #     -- Create a new note after asking for its title.
-        #     -- This overrides the global `<leader>zn` mapping to create the note in the same directory as the current buffer.
-        #     map("n", "<leader>zn", "<Cmd>ZkNew { dir = vim.fn.expand('%:p:h'), title = vim.fn.input('Title: ') }<CR>", opts)
-        #     -- Create a new note in the same directory as the current buffer, using the current selection for title.
-        #     map("v", "<leader>znt", ":'<,'>ZkNewFromTitleSelection { dir = vim.fn.expand('%:p:h') }<CR>", opts)
-        #     -- Create a new note in the same directory as the current buffer, using the current selection for note content and asking for its title.
-        #     map("v", "<leader>znc", ":'<,'>ZkNewFromContentSelection { dir = vim.fn.expand('%:p:h'), title = vim.fn.input('Title: ') }<CR>", opts)
-        #
-        #     -- Open notes linking to the current buffer.
-        #     map("n", "<leader>zb", "<Cmd>ZkBacklinks<CR>", opts)
-        #     -- Alternative for backlinks using pure LSP and showing the source context.
-        #     --map('n', '<leader>zb', '<Cmd>lua vim.lsp.buf.references()<CR>', opts)
-        #     -- Open notes linked by the current buffer.
-        #     map("n", "<leader>zl", "<Cmd>ZkLinks<CR>", opts)
-        #
-        #     -- Preview a linked note.
-        #     map("n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", opts)
-        #     -- Open the code actions for a visual selection.
-        #     map("v", "<leader>za", ":'<,'>lua vim.lsp.buf.range_code_action()<CR>", opts)
-        #   end
-        # '';
-      };
     };
     extraConfigLuaPre = ''
       vim.lsp.inlay_hint.enable(true)
-      -- local helpers = require("null-ls.helpers")
-      -- helpers.formatter_factory({
-      --  command = "nasmfmt",
-      --  from_temp_file = true,
-      --  to_temp_file = true
-      -- })
-
-
-      local has_words_before = function()
-        unpack = unpack or table.unpack
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-      end
-      local luasnip = require("luasnip")
-
-      local efm_fs = require('efmls-configs.fs')
-      local djlint_fmt = {
-       formatCommand = string.format('%s --reformat ''${INPUT} -', efm_fs.executable('djlint')),
-       formatStdin = true,
-      }
     '';
 
-    extraConfigLuaPost = ''
-
-      require("nvim-treesitter.configs").setup({
-       matchup = { enable = false } }
-      )
-      vim.g.matchup_matchparen_enabled = 0
-      require("luasnip.loaders.from_snipmate").lazy_load()
-
-      vim.api.nvim_create_user_command("LtexLangChangeLanguage", function(data)
-          local language = data.fargs[1]
-          local bufnr = vim.api.nvim_get_current_buf()
-          local client = vim.lsp.get_active_clients({ bufnr = bufnr, name = 'ltex' })
-          if #client == 0 then
-              vim.notify("No ltex client attached")
-          else
-              client = client[1]
-              client.config.settings = {
-                  ltex = {
-                      language = language
-                  }
-              }
-              client.notify('workspace/didChangeConfiguration', client.config.settings)
-              vim.notify("Language changed to " .. language)
-          end
-        end, {
-          nargs = 1,
-          force = true,
-      })
-    '';
-
-    extraPackages = with pkgs; [
-      djlint
-      muon
-    ];
+    extraPackages = [];
 
     extraPlugins = with pkgs.vimPlugins; [
       telescope-ui-select-nvim
       vim-snippets
       markdown-preview-nvim
-      ft-std-header
-      tree-sitter-dbml
     ];
   };
 }

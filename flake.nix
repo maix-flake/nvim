@@ -4,19 +4,18 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
-    nixvim = {
-      url = "github:nix-community/nixvim";
-    };
+    nixvim.url = "github:nix-community/nixvim";
+    
     # Plugins that are not in nixpkgs
     "new-plugin:vim-headerguard" = {
       url = "github:drmikehenry/vim-headerguard";
       flake = false;
     };
 
-    "new-plugin:ft-std-header" = {
-      url = "github:42Paris/42header";
-      flake = false;
-    };
+    #"new-plugin:ft-std-header" = {
+    #  url = "github:42Paris/42header";
+    #  flake = false;
+    #};
   };
 
   outputs = {
@@ -31,8 +30,8 @@
         module = {
           imports = [
             ./config.nix
-            ./plugins/headerguard.nix
-            ./plugins/lsp-signature.nix
+            #./plugins/headerguard.nix
+            #./plugins/lsp-signature.nix
           ];
         };
 
