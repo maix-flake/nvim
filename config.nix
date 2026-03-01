@@ -185,6 +185,11 @@
 
     clipboard.providers.wl-copy.enable = true;
     plugins = {
+
+      luasnip = {
+        enable = true;
+        autoLoad = true;
+      };
       efmls-configs = {
         enable = true;
 
@@ -223,20 +228,11 @@
       gitsigns.enable = true;
       gitmessenger.enable = true;
 
-      luasnip = {
-        enable = true;
-      };
-
-      # cmp.settings.snippet.expand= "luasnip";
-
       cmp = {
         enable = true;
 
         settings = {
           snippet.expand = ''
-            function(args)
-              require('luasnip').lsp_expand(args.body)
-            end
           '';
           mapping = {
             "<CR>" = "cmp.mapping.confirm({select = true })";
@@ -247,12 +243,6 @@
               cmp.mapping(function(fallback)
                 if cmp.visible() then
                   cmp.select_next_item()
-                -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-                -- they way you will only jump inside the snippet region
-                elseif luasnip.expand_or_locally_jumpable() then
-                  luasnip.expand_or_jump()
-                elseif has_words_before() then
-                  cmp.complete()
                 else
                   fallback()
                 end
@@ -262,8 +252,6 @@
               cmp.mapping(function(fallback)
                 if cmp.visible() then
                   cmp.select_prev_item()
-                elseif luasnip.jumpable(-1) then
-                  luasnip.jump(-1)
                 else
                   fallback()
                 end
@@ -274,7 +262,6 @@
           };
 
           sources = [
-            {name = "luasnip";}
             {name = "nvim_lsp";}
             {name = "path";}
             {name = "buffer";}
